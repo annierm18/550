@@ -1,253 +1,108 @@
 import React from 'react';
-import { Form, FormInput, FormGroup, Button, Card, CardBody, CardTitle, Progress } from "shards-react";
+import MovieDetailsCard from '../components/MovieDetailsCard';
+import "./MovieDetailsPage.css";
 
-import {
-    Table,
-    Pagination,
-    Select,
-    Row,
-    Col,
-    Divider,
-    Slider,
-    Rate 
-} from 'antd'
-import { RadarChart } from 'react-vis';
-import { format } from 'd3-format';
-
-
-
-
+import { getMovie } from '../fetcher'
 import MenuBar from '../components/MenuBar';
-import { getPlayerSearch, getPlayer } from '../fetcher'
-const wideFormat = format('.3r');
 
-const playerColumns = [
-    {
-        title: 'Name',
-        dataIndex: 'Name',
-        key: 'Name',
-        sorter: (a, b) => a.Name.localeCompare(b.Name),
-        render: (text, row) => <a href={`/players?id=${row.PlayerId}`}>{text}</a>
-    },
-    {
-        title: 'Nationality',
-        dataIndex: 'Nationality',
-        key: 'Nationality',
-        sorter: (a, b) => a.Nationality.localeCompare(b.Nationality)
-    },
-    {
-        title: 'Rating',
-        dataIndex: 'Rating',
-        key: 'Rating',
-        sorter: (a, b) => a.Rating - b.Rating
-
-    }
-    // TASK 19: copy over your answers for tasks 7 - 9 to add columns for potential, club, and value
-];
-
+const movieDetail1 = [{"Title":"Inception",
+"Year":2010,
+"Language":"en",
+"Overview":"Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: \"inception\", the implantation of another person's idea into a target's subconscious.",
+"Popularity":29.1081,
+"Runtime":148,
+"Type":"movie",
+"Genres":"Action, Adventure, Mystery, Sci-Fi, ScienceFiction, Thriller",
+"Companies":"Legendary Pictures, Syncopy, Warner Bros.",
+"Countries":"United Kingdom, United States of America","SpokenLanguages":"English",
+"PosterLink":"https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg",
+"URL":"https://www.imdb.com/title/tt1375666/",
+"RatingValue":8.8,
+"RatingCount":2050656}]
 
 class PlayersPage extends React.Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            nameQuery: '',
-            nationalityQuery: '',
-            clubQuery: '',
-            ratingHighQuery: 100,
-            ratingLowQuery: 0,
-            potHighQuery: 100,
-            potLowQuery: 0,
-            selectedPlayerId: window.location.search ? window.location.search.substring(1).split('=')[1] : 229594,
-            selectedPlayerDetails: null,
-            playersResults: []
+  constructor(props) {
+      super(props)
+      this.state = {
+          titleQuery: '',
+          yearQuery: '',
+          selectedMovieDetailsId: window.location.search ? window.location.search.substring(1).split('=')[1] : 229594,
+          selectedMovieDetails: null,
+          movieDetailResults: []
 
-        }
+      }
 
-        this.updateSearchResults = this.updateSearchResults.bind(this)
-        this.handleNameQueryChange = this.handleNameQueryChange.bind(this)
-        this.handleNationalityQueryChange = this.handleNationalityQueryChange.bind(this)
-        this.handleClubQueryChange = this.handleClubQueryChange.bind(this)
-        this.handleRatingChange = this.handleRatingChange.bind(this)
-        this.handlePotentialChange = this.handlePotentialChange.bind(this)
+      this.updateSearchResults = this.updateSearchResults.bind(this)
+        this.handleTitleQueryChange = this.handleTitleQueryChange.bind(this)
+        this.handleYearQueryChange = this.handleYearQueryChange.bind(this)
     }
 
-    
+    handleTitleQueryChange(event) {
+      this.setState({ titleQuery: event.target.value })
+  }
 
-    handleNameQueryChange(event) {
-        this.setState({ nameQuery: event.target.value })
-    }
-
-    handleClubQueryChange(event) {
-        // TASK 20: update state variables appropriately. See handleNameQueryChange(event) for reference
-    }
-
-    handleNationalityQueryChange(event) {
-        // TASK 21: update state variables appropriately. See handleNameQueryChange(event) for reference
-    }
-
-    handleRatingChange(value) {
-        this.setState({ ratingLowQuery: value[0] })
-        this.setState({ ratingHighQuery: value[1] })
-    }
-
-    handlePotentialChange(value) {
-        // TASK 22: parse value and update state variables appropriately. See handleRatingChange(value) for reference
-    }
+  handleYearQueryChange(event) {
+      this.setState({ yearQuery: event.target.value })
+  }
 
 
+  updateSearchResults() {
 
-    updateSearchResults() {
+      getMovie(this.state.nameQuery, this.state.nationalityQuery, this.state.clubQuery, this.state.ratingHighQuery, this.state.ratingLowQuery, this.state.potHighQuery, this.state.potLowQuery, null, null).then(res => {
+          this.setState({ playersResults: res.results })
+      })
+  }
 
-        //TASK 23: call getPlayerSearch and update playerResults in state. See componentDidMount() for a hint
+  componentDidMount() {
+      getMovie(this.state.titleQuery, this.state.YearQuery).then(res => {
+          this.setState({ movieDetailResults: res.results })
+      })
 
-    }
+  }
 
-    componentDidMount() {
-        getPlayerSearch(this.state.nameQuery, this.state.nationalityQuery, this.state.clubQuery, this.state.ratingHighQuery, this.state.ratingLowQuery, this.state.potHighQuery, this.state.potLowQuery, null, null).then(res => {
-            this.setState({ playersResults: res.results })
-        })
+  render() {
+    return (
+        <div>
+            <MenuBar />
 
-        // TASK 25: call getPlayer with the appropriate parameter and set update the correct state variable. 
-        // See the usage of getMatch in the componentDidMount method of MatchesPage for a hint! 
+            <div className="app__header app__wrapper section__padding" id="home">
+              <div className="app__wrapper_img">
+              {/* <img src={movieDetail1.PosterLink !== "N/A" ? movieDetail1.PosterLink : "https://via.placeholder.com/400"} alt={movieDetail1.Title} /> */}
+              <img src ={"https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg"}/>
+              </div>
+              <div className="app__wrapper_info">
+                {/* <MovieDetailsCard title="Chase the new flavour" /> */}
 
-    }
+                {/* {this.state.movieDetailResults?.length > 0 ? (
+                                <div className="container">
+                                    {this.state.movieDetailResults.map((title) => (
+                                        <MovieDetailsCard movie={title} />
+                                ))}
+                            </div>
+                            ) : (
+                            <div className="empty">
+                                {console.log("PRINTING!!!: " + this.state.movieDetails)}
+                                <h2>{this.state.movieDetails?.length}</h2>
+                                <h2>No movies found</h2>
+                            </div>
+                            )} */}
 
-    render() {
-        return (
+                <h1 className="app__header-h1">Inception</h1>
+                <p className="p__opensans">Type: </p>
+                <p className="p__opensans">Overview: Cobb, a skilled thief who commits corporate espionage by infiltrating the subconscious of his targets is offered a chance to regain his old life as payment for a task considered to be impossible: \"inception\", the implantation of another person's idea into a target's subconscious. </p>
+                <p className="p__opensansBig">More Movie Details: </p>
+                <p className="p__opensans">Year: {this.state.yearQuery} </p>
+                <p className="p__opensans">Country: </p>
+                <p className="p__opensans">Language:  </p>
+                <p className="p__opensans">Genre: </p>
+                <p className="p__opensans">Popularity: </p>
+                <p className="p__opensans">Runtime: </p>
+               
+              </div>
 
-            <div>
-
-                <MenuBar />
-                <Form style={{ width: '80vw', margin: '0 auto', marginTop: '5vh' }}>
-                    <Row>
-                        <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
-                            <label>Name</label>
-                            <FormInput placeholder="Name" value={this.state.nameQuery} onChange={this.handleNameQueryChange} />
-                        </FormGroup></Col>
-                        <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
-                            <label>Nationality</label>
-                            <FormInput placeholder="Nationality" value={this.state.nationalityQuery} onChange={this.handleNationalityQueryChange} />
-                        </FormGroup></Col>
-                        {/* TASK 26: Create a column for Club, using the elements and style we followed in the above two columns. Use the onChange method (handleClubQueryChange)  */}
-
-                    </Row>
-                    <br></br>
-                    <Row>
-                        <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
-                            <label>Rating</label>
-                            <Slider range defaultValue={[50, 100]} onChange={this.handleRatingChange} />
-
-                        </FormGroup></Col>
-                        {/* TASK 27: Create a column with a label and slider in a FormGroup item for filtering by Potential. See the column above for reference and use the onChange method (handlePotentialChange)  */}
-                        <Col flex={2}><FormGroup style={{ width: '10vw' }}>
-                            <Button style={{ marginTop: '4vh' }} onClick={this.updateSearchResults}>Search</Button>
-                        </FormGroup></Col>
-
-                    </Row>
-
-
-                </Form>
-                <Divider />
-                {/* TASK 24: Copy in the players table from the Home page, but use the following style tag: style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }} - this should be one line of code! */}
-
-                <Divider />
-
-                {this.state.selectedPlayerDetails ? <div style={{ width: '70vw', margin: '0 auto', marginTop: '2vh' }}>
-                    <Card>
-                    
-                        <CardBody>
-                        <Row gutter='30' align='middle' justify='center'>
-                            <Col flex={2} style={{ textAlign: 'left' }}>
-                            <h3>{this.state.selectedPlayerDetails.Name}</h3>
-
-                            </Col>
-
-                            <Col flex={2} style={{ textAlign: 'right' }}>
-                            <img src={this.state.selectedPlayerDetails.Photo} referrerpolicy="no-referrer" alt={null} style={{height:'15vh'}}/>
-
-                            </Col>
-                        </Row>
-                            <Row gutter='30' align='middle' justify='left'>
-                                <Col>
-                                <h5>{this.state.selectedPlayerDetails.Club}</h5>
-                                </Col>
-                                <Col>
-                                <h5>{this.state.selectedPlayerDetails.JerseyNumber}</h5>
-                                </Col>
-                                <Col>
-                                <h5>{this.state.selectedPlayerDetails.BestPosition}</h5>
-                                </Col>
-                            </Row>
-                            <br>
-                            </br>
-                            <Row gutter='30' align='middle' justify='left'>
-                                <Col>
-                                Age: {this.state.selectedPlayerDetails.Age}
-                                </Col>
-                                {/* TASK 28: add two more columns here for Height and Weight, with the appropriate labels as above */}
-                                <Col flex={2} style={{ textAlign: 'right' }}>
-                                {this.state.selectedPlayerDetails.Nationality}
-                                    <img src={this.state.selectedPlayerDetails.Flag} referrerpolicy="no-referrer" alt={null} style={{height:'3vh', marginLeft: '1vw'}}/>
-                                </Col>
-
-                            </Row>
-                            <Row gutter='30' align='middle' justify='left'>
-                                <Col>
-                                Value: {this.state.selectedPlayerDetails.Value}
-                                </Col>
-                                <Col>
-                                Release Clause: {this.state.selectedPlayerDetails.ReleaseClause}
-                                </Col>
-                                {/* TASK 29: Create 2 additional columns for the attributes 'Wage' and 'Contract Valid Until' (use spaces between the words when labelling!) */}
-                            </Row>
-                        </CardBody>
-
-                    </Card>
-
-                    <Card style={{marginTop: '2vh'}}>
-                        <CardBody>
-                            <Row gutter='30' align='middle' justify='center'>
-                            <Col flex={2} style={{ textAlign: 'left' }}>
-                            <h6>Skill</h6>
-                            <Rate disabled defaultValue={this.state.selectedPlayerDetails.Skill} />
-                            <h6>Reputation</h6>
-                            {/* TASK 30: create a star rating component for 'InternationalReputation'. Make sure you use the 'disabled' option as above to ensure it is read-only*/}
-                            <Divider/>
-                            <h6>Best Rating</h6>
-                                <Progress style={{ width: '20vw'}} value={this.state.selectedPlayerDetails.BestOverallRating} >{this.state.selectedPlayerDetails.BestOverallRating}</Progress>
-                                {/* TASK 31: create the headings and progress bars for 'Potential' and 'Rating'. Use the same style as the one above for 'Best Rating'.*/}
-                                </Col >
-                                <Col  push={2} flex={2}>
-                                {/*TASK 32: In case the player is a GK, show a radar chart (replacing 'null' below) with the labels: Agility, Ball Control, Passing, Positioning, Stamina, Strength */}
-
-                                    {this.state.selectedPlayerDetails.BestPosition === 'GK'?null:<RadarChart
-                                data={[this.state.selectedPlayerDetails]}
-                                tickFormat={t => wideFormat(t)}
-                                startingAngle={0}
-                                domains={[
-                                    { name: 'Agility', domain: [0, 100], getValue: d => d.NAdjustedAgility },
-                                    { name: 'Ball Control', domain: [0, 100], getValue: d => d.NBallControl },
-                                    { name: 'Passing', domain: [0, 100], getValue: d => d.NPassing },
-                                    { name: 'Positioning', domain: [0, 100], getValue: d => d.NPositioning },
-                                    { name: 'Stamina', domain: [0, 100], getValue: d => d.NStamina },
-                                    { name: 'Strength', domain: [0, 100], getValue: d => d.NStrength }
-                                ]}
-                                width={450}
-                                height={400}
-                                
-                            />}
-                                
-                                </Col>
-                            </Row>
-                        </CardBody>
-                    </Card>
-
-                </div> : null}
-
-            </div>
-        )
-    }
+    </div>
+  </div>
+    )}
 }
 
-export default PlayersPage
-
+    export default PlayersPage
