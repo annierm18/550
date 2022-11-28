@@ -73,6 +73,7 @@ class MatchesPage extends React.Component {
     componentDidMount() {
         getTenMostPopular().then(res => {
             this.setState({ movieDetails: res.results})
+            {console.log("MATCHESPAGE resresult: " + res.results)}
         })
         
     }

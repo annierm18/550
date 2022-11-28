@@ -148,7 +148,7 @@ async function get_all_from_country(req, res) {
 async function most_popular_movies(req, res) {
 
     connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, mt.Popularity as Popularity, rl.RatingValue as RatingValue
+            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, mt.Popularity as Popularity, rl.RatingValue as RatingValue, rl.Year as Year
             FROM MoviesTVShows mt
             JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
             ORDER BY Popularity desc, RatingValue desc
@@ -186,7 +186,7 @@ async function filters(req, res) {
     } else if (req.query.language && !req.query.genre && !req.query.release_year) { // ONLY language is specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink
+            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
@@ -204,7 +204,7 @@ async function filters(req, res) {
     } else if (!req.query.language && req.query.genre && !req.query.release_year) { // ONLY genre is specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink
+            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
@@ -222,7 +222,7 @@ async function filters(req, res) {
     } else if (!req.query.language && !req.query.genre && req.query.release_year) { // ONLY release_year is specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink
+            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
@@ -240,7 +240,7 @@ async function filters(req, res) {
     } else if (req.query.language && req.query.genre && !req.query.release_year) { // ONLY language and genre are specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink
+            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
@@ -258,7 +258,7 @@ async function filters(req, res) {
     } else if (!req.query.language && req.query.genre && req.query.release_year) { // ONLY genre and release_year are specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink
+            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
@@ -276,7 +276,7 @@ async function filters(req, res) {
     } else if (req.query.language && !req.query.genre && req.query.release_year) { // ONLY language and release_year are specified// ONLY release_year is specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink
+            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
@@ -293,7 +293,7 @@ async function filters(req, res) {
 
     } else { // all three filters are specified
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink
+            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year

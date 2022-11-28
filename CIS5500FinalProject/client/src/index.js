@@ -27,7 +27,8 @@ ReactDOM.render(
 							path="/players"
 							render={() => (
 								<PlayersPage />
-							)}/>
+							)}
+							component={PlayersPage}/>
         <Route exact
 							path="/matches"
 							render={() => (
