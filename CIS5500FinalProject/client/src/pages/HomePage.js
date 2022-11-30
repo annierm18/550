@@ -1,4 +1,5 @@
 import React from 'react';
+import MoviesShowsMap from '../components/MoviesShowsMap';
 import {
   Table,
   Pagination,
@@ -82,8 +83,14 @@ class HomePage extends React.Component {
   render() {
 
     return (
-      <div>
+      <>
         <MenuBar />
+        <MoviesShowsMap />
+      </>
+
+      /** 
+      <div>
+       
         <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
           <h3>Players</h3>
           <Table dataSource={this.state.playersResults} columns={playerColumns} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}/>
@@ -92,7 +99,6 @@ class HomePage extends React.Component {
           <h3>Matches</h3>
           <Select defaultValue="D1" style={{ width: 120 }} onChange={this.leagueOnChange}>
             <Option value="D1">Bundesliga</Option>
-             {/* TASK 3: Take a look at Dataset Information.md from MS1 and add other options to the selector here  */}
 
           </Select>
           
@@ -102,20 +108,18 @@ class HomePage extends React.Component {
     };
   }} dataSource={this.state.matchesResults} pagination={{ pageSizeOptions:[5, 10], defaultPageSize: 5, showQuickJumper:true }}>
             <ColumnGroup title="Teams">
-              {/* TASK 4: correct the title for the 'Home' column and add a similar column for 'Away' team in this ColumnGroup */}
               <Column title="H" dataIndex="Home" key="Home" sorter= {(a, b) => a.Home.localeCompare(b.Home)}/>
             </ColumnGroup>
             <ColumnGroup title="Goals">
-              {/* TASK 5: add columns for home and away goals in this ColumnGroup, with the ability to sort values in these columns numerically */}
              
             </ColumnGroup>
-             {/* TASK 6: create two columns (independent - not in a column group) for the date and time. Do not add a sorting functionality */}
           </Table>
 
         </div>
 
 
       </div>
+      */
     )
   }
 
