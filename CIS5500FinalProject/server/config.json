@@ -1,0 +1,9 @@
+{
+    "rds_host": "cis-5500-sg.cc2idpo6hbip.us-east-2.rds.amazonaws.com",
+    "rds_port": "3306",
+    "rds_user": "sgoel018",
+    "rds_password" : "iCandothis2223^",
+    "rds_db": "GROUPPROJECT",
+    "server_host": "127.0.0.1",
+    "server_port":"8080"
+}
