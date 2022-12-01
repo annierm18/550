@@ -1,37 +1,36 @@
-import React from 'react';
-import {
-    Navbar,
-    NavbarBrand,
-    Nav,
-    NavItem,
-    NavLink
-  } from "shards-react";
+import React from "react";
+import { Link } from "react-router-dom";
+import "./MenuBar.css";
 
-class MenuBar extends React.Component {
-    render() {
-        return(
-            <Navbar type="dark" theme="primary" expand="md">
-        <NavbarBrand href="/">CIS 550 FIFA</NavbarBrand>
-          <Nav navbar>
-          <NavItem>
-              <NavLink active href="/">
-                Home
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink active href="/players">
-                Players
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink active  href="/matches" >
-                Matches
-              </NavLink>
-            </NavItem>
-          </Nav>
-      </Navbar>
-        )
-    }
+function NavBar() {
+
+    return (
+        <nav className="navbar-container">
+            <header className="navbar-header">
+                {/* <input type="checkbox" className="" id="chk1"/> */}
+                <div className="logo">
+                    <Link to="/"><i className="fa fa-globe fa-2x"></i></Link>
+                    <h2>Movie PAAS</h2>
+                </div>
+                {/* <div className="search-box">
+                    <form action="">
+                        <input type="text" className="search" id="srch" placeholder="Search..."/>
+                        <button type="submit"><i className="fa fa-search"></i></button>
+                    </form>
+                </div> */}
+                <ul>
+                    <li><Link to="/">Home</Link></li>
+                    <li><Link to="/matches">Recomendations</Link></li>
+                    <li><Link to="/">Extra Link</Link></li>
+                </ul>
+                {/* <div className="menu">
+                    <label for='chk1'>
+                        <i className="fa fa-bars"></i>
+                    </label>
+                </div> */}
+            </header>
+        </nav>
+    );
 }
 
-export default MenuBar
+export default NavBar;
