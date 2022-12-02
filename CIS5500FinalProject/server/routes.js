@@ -63,32 +63,32 @@ async function movie(req, res) {
             With G as (
               SELECT s.Title, s.Year, s.Language, s.Overview, s.Popularity, s.Runtime, s.Type, GROUP_CONCAT(g.Genre SEPARATOR ', ') as Genres
               FROM MoviesTVShows s
-                  JOIN Genres g ON s.Title = g.Title AND s.Year = g.Year
-              GROUP BY s.title
+                  LEFT JOIN Genres g ON s.Title = g.Title AND s.Year = g.Year
+              GROUP BY s.title, s.year
             ),
             Comp as (
               SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, GROUP_CONCAT(c.Company SEPARATOR ', ') as Companies
               FROM G g
-                  JOIN ProductionCompanies c ON g.Title = c.Title AND g.Year = c.Year
-              GROUP BY g.title
+                  LEFT JOIN ProductionCompanies c ON g.Title = c.Title AND g.Year = c.Year
+              GROUP BY g.title, g.year
             ),
             C as (
               SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Companies, GROUP_CONCAT(c.Country SEPARATOR ', ') as Countries
               FROM Comp g
-                  JOIN Countries c ON g.Title = c.Title AND g.Year = c.Year
-              GROUP BY g.title
+                  LEFT JOIN Countries c ON g.Title = c.Title AND g.Year = c.Year
+              GROUP BY g.title, g.year
             ),
             Spoken as (
               SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Companies, g.Countries, GROUP_CONCAT(sp.Language SEPARATOR ', ') as SpokenLanguages
               FROM C g
-                  JOIN SpokenLanguage sp ON g.Title = sp.Title AND g.Year = sp.Year
-              GROUP BY g.title
+                  LEFT JOIN SpokenLanguage sp ON g.Title = sp.Title AND g.Year = sp.Year
+              GROUP BY g.title, g.year
             ),
             Rating as (
               SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Companies, g.Countries, g.SpokenLanguages, sp.PosterLink, sp.URL, sp.RatingValue, sp.RatingCount
               FROM Spoken g
-                  JOIN RatingsLinks sp ON g.Title = sp.Title AND g.Year = sp.Year
-              GROUP BY g.title
+                  LEFT JOIN RatingsLinks sp ON g.Title = sp.Title AND g.Year = sp.Year
+              GROUP BY g.title, g.year
             )
             SELECT *
             From Rating
