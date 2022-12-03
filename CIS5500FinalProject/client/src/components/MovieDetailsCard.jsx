@@ -1,7 +1,10 @@
 import React from 'react';
 
+
 const MovieDetailsCard = ({ title: {Title, Year, Language, Overview, Popularity, Runtime, Type, Genres, Companies, Countries, SpokenLanguages, PosterLink, URL, RatingValue, RatingCount }}) => {
-  return (
+  return (<>
+ 
+    <h1 className="app__header-h1">{Title}</h1>
     <div className="app__header app__wrapper section__padding" id="home">
               <div className="app__wrapper_img">
               {/* <img src={movieDetail1.PosterLink !== "N/A" ? movieDetail1.PosterLink : "https://via.placeholder.com/400"} alt={movieDetail1.Title} /> */}
@@ -24,7 +27,7 @@ const MovieDetailsCard = ({ title: {Title, Year, Language, Overview, Popularity,
                             </div>
                             )} */}
 
-                <h1 className="app__header-h1">{Title}</h1>
+                {/* <h1 className="app__header-h1">{Title}</h1> */}
                 <p className="p__opensans">Type: {Type} </p>
                 <p className="p__opensans">Overview: {Overview} </p>
                 <p className="p__opensansBig">More Movie Details: </p>
@@ -38,6 +41,7 @@ const MovieDetailsCard = ({ title: {Title, Year, Language, Overview, Popularity,
               </div>
 
     </div>
+    </>
   );
 }
   

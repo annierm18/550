@@ -20,7 +20,7 @@ function NavBar() {
                 </div> */}
                 <ul>
                     <li><Link to="/">Home</Link></li>
-                    <li><Link to="/matches">Recomendations</Link></li>
+                    <li><Link to="/rec">Recomendations</Link></li>
                     <li><Link to="/">Extra Link</Link></li>
                 </ul>
                 {/* <div className="menu">
