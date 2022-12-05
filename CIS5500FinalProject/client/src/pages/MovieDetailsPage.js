@@ -77,7 +77,7 @@ class MovieDetailsPage extends React.Component {
       // getMovie(this.state.titleQuery, this.state.YearQuery).then(res => {
           this.setState({ movieDetailResults: res.results })
         //   {console.log("resresults: " + res.results)}
-        //   {console.log("RESULTS PRINT!!!: " + JSON.stringify(this.props))}
+          {console.log("RESULTS PRINT!!!: " + JSON.stringify(this.props))}
         //   {console.log("movieDETAILSPRINT: " + this.state.movieDetailResults)}
           
       })

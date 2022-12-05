@@ -70,21 +70,46 @@ class RecommendationsPage extends React.Component {
         
         getFilteredMovieResults(this.state.languageQuery, this.state.genreQuery, this.state.releaseYearQuery).then(res => {
             console.log("PRINTING: " +  " langauge:" + this.state.languageQuery + " genre" + this.state.genreQuery + " releaseYear" + this.state.releaseYearQuery)
-            this.setState({ movieDetails: res.results })
-            console.log("RESULTS " + this.state.movieDetails)
+            this.setState({ movieDetails: res.results})
+            //localStorage.setItem('movieDetails', JSON.stringify(res.results))
+            localStorage.setItem('movieDetailsState', JSON.stringify(this.state))
         })
     }
 
     componentDidMount() {
+
+        if(this.props.history.action == "POP") {
+            console.log("HEREEEEE")
+            if (localStorage.getItem('movieDetailsState')) {
+                //this.state = JSON.parse(localStorage.getItem('movieDetailsState'))
+                this.setState(JSON.parse(localStorage.getItem('movieDetailsState')))
+                console.log("LOCAL STORAGE MOVIES:: " + localStorage.getItem('movieDetailsState'))
+                // this.setState({
+                //     movieDetails: JSON.parse(localStorage.getItem('movieDetails')),
+                //     totalPage: JSON.parse(localStorage.getItem('movieDetails')) / pageSize, 
+                //     minIndex: 0, 
+                //     maxIndex: pageSize
+                // })
+            }
+    } else {
         getTenMostPopular().then(res => {
             this.setState({ 
                 movieDetails: res.results, 
                 totalPage: res.results.length / pageSize, 
                 minIndex: 0, 
                 maxIndex: pageSize})
+                localStorage.setItem('movieDetailsState', JSON.stringify(this.state))
         })
-        
+        //.finally(localStorage.setItem('movieDetails', JSON.stringify(this.state.movieDetails)))
+        // .then(localStorage.setItem('movieDetailsState', JSON.stringify(this.state)))
+
     }
+
+        {console.log("RESULTS PRINT2!!!: " + JSON.stringify(this.props))}
+
+        {console.log("Final State at end of Mount:: "+ JSON.stringify(this.state))}
+    }
+
 
     handleChange = (page) => {
         this.setState({
@@ -92,6 +117,7 @@ class RecommendationsPage extends React.Component {
           minIndex: (page - 1) * pageSize,
           maxIndex: page * pageSize
         });
+        localStorage.setItem('movieDetailsState', JSON.stringify(this.state))
         {console.log("PAGE????: " + page)}
       };
 
@@ -101,24 +127,24 @@ class RecommendationsPage extends React.Component {
                 <MenuBar />
                 <Form style={{ width: '80vw', margin: '0 auto', marginTop: '5vh' }}>
                 <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
-                    <h1>Find Your Favorite Movie!</h1>
+                    <h1>Movie Browser</h1>
                     </div>
                     <Row>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
-                            <label>Genre</label>
+                            <label><b>Genre</b></label>
                             <FormInput placeholder="Genre" defaultValue={this.state.genreQuery} onChange={this.handleGenreQueryChange} />
                         </FormGroup></Col>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
-                            <label>Language</label>
+                            <label><b>Language</b></label>
                             <FormInput placeholder="en" defaultValue={this.state.languageQuery} onChange={this.handleLanguageQueryChange} />
                         </FormGroup></Col>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
-                            <label>Release Year</label>
+                            <label><b>Release Year</b></label>
                             <FormInput placeholder="1999" defaultValue={this.state.releaseYearQuery} onChange={this.handleReleaseYearQueryChange} />
                         </FormGroup></Col>
                         
-                        <Col flex={2}><FormGroup style={{ width: '10vw' }}>
-                            <Button style={{ marginTop: '2.4vh' }} onClick={this.updateSearchResults}>Search</Button>
+                        <Col flex={2}><FormGroup style={{ width: '10vw', margin: '0 auto'}}>
+                            <Button theme="light" style={{ marginTop: '1.8rem' }} onClick={this.updateSearchResults}>Search</Button>
                         </FormGroup></Col>
 
                     </Row>
@@ -126,7 +152,7 @@ class RecommendationsPage extends React.Component {
 
                 </Form>
                 <Divider />
-
+                {console.log("IS IT HERE?")}
                             {this.state.movieDetails?.length > 0 ? (
                                 <div>
                                 <div className="container">
@@ -134,6 +160,7 @@ class RecommendationsPage extends React.Component {
                                         <MovieCard movie={movie} />
                                         
                                 ))}
+                                
                             </div>
                             <div className='pagination'>
                             <Pagination
@@ -143,15 +170,13 @@ class RecommendationsPage extends React.Component {
                                     onChange={this.handleChange}
                                     // pageSizeOptions= {[]}
                                     showSizeChanger= {false}
-                                    
-                                    // style={{ }}
+
                                 />
                             </div>
                             </div>
                             ) : (
                             <div className="empty">
-                                {/* <h2>{this.state.movieDetails?.length}</h2> */}
-                                <h2>No movies found</h2>
+                                <h2>No movies found.   Try another filter!</h2>
                             </div>
                             )}
 

@@ -11,32 +11,19 @@ const MovieDetailsCard = ({ title: {Title, Year, Language, Overview, Popularity,
               <img src ={PosterLink !== "N/A" ? PosterLink : "https://via.placeholder.com/400"} alt={Title}/>
               </div>
               <div className="app__wrapper_info">
-                {/* <MovieDetailsCard title="Chase the new flavour" /> */}
-
-                {/* {this.state.movieDetailResults?.length > 0 ? (
-                                <div className="container">
-                                    {this.state.movieDetailResults.map((title) => (
-                                        <MovieDetailsCard movie={title} />
-                                ))}
-                            </div>
-                            ) : (
-                            <div className="empty">
-                                {console.log("PRINTING!!!: " + this.state.movieDetails)}
-                                <h2>{this.state.movieDetails?.length}</h2>
-                                <h2>No movies found</h2>
-                            </div>
-                            )} */}
+              
 
                 {/* <h1 className="app__header-h1">{Title}</h1> */}
-                <p className="p__opensans">Type: {Type} </p>
-                <p className="p__opensans">Overview: {Overview} </p>
-                <p className="p__opensansBig">More Movie Details: </p>
-                <p className="p__opensans">Year: {Year} </p>
-                <p className="p__opensans">Country: {Countries} </p>
-                <p className="p__opensans">Language: {Language}</p>
-                <p className="p__opensans">Genre: {Genres}</p>
-                <p className="p__opensans">Popularity: {Popularity}</p>
-                <p className="p__opensans">Runtime: {Runtime}</p>
+                <p className="movieDetailLabel"> Type: <span className="movieDetailText">{Type} </span></p>
+                <p className="movieDetailLabel"> Overview: <span className="movieDetailText">{Overview} </span></p>
+                <p className="p__opensansBig">More Details: </p>
+                <p className="movieDetailLabel"> Year: <span className="movieDetailText">{Year} </span></p>
+                <p className="movieDetailLabel"> Country: <span className="movieDetailText">{Countries} </span></p>
+                <p className="movieDetailLabel"> Language: <span className="movieDetailText">{Language} </span></p>
+                <p className="movieDetailLabel"> Genre: <span className="movieDetailText">{Genres} </span></p>
+                <p className="movieDetailLabel"> Popularity: <span className="movieDetailText">{Popularity} (million) </span></p>
+                <p className="movieDetailLabel"> Runtime: <span className="movieDetailText">{Runtime} minutes </span></p>
+                <p className="movieDetailLabel">IMDB: <span className="movieDetailText"><a href = {URL} target ="_blank">{URL}</a> </span></p>
                
               </div>
 
