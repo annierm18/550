@@ -51,12 +51,13 @@ async function movie(req, res) {
     var title = req.query.title;
     const year = req.query.year;
 
-    //console.log(title1);
+    // console.log(title);
 
-    // if (title1.includes('_')) {
-    //     title1 = title1.replace('_', ' ');
-    //     //console.log(title1);
-    // }
+    if (title.includes("'")) {
+        title = title.replace("'", "''");
+        // console.log(title);
+    }
+
     // NaN refers to Not-a-Number
     if (req.query.title && req.query.year && !isNaN(req.query.year)) {
         connection.query(`
