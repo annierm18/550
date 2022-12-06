@@ -48,8 +48,13 @@ async function hello(req, res) {
 async function movie(req, res) {
     // a GET request to /movie?title=The+Lion+King&year=1994
     // a GET request to /movie?title=Altar&year=2014
-    const title = req.query.title;
+    var title = req.query.title;
     const year = req.query.year;
+
+    if (title.includes("'")) {
+        title = title.replace("'", "''");
+        // console.log(title);
+    }
 
     // NaN refers to Not-a-Number
     if (req.query.title && req.query.year && !isNaN(req.query.year)) {
