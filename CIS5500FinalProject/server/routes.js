@@ -130,12 +130,13 @@ async function get_all_from_country(req, res) {
     // NaN refers to Not-a-Number
     if (req.query.country) {
         connection.query(`
-            SELECT distinct(mt.Title) as Title, Popularity, RatingValue, Country, PosterLink
+            SELECT distinct(mt.Title) as Title, Popularity, RatingValue, Country, PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
             JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
             JOIN Countries c on mt.Year = c.Year and mt.Title = c.Title
             WHERE c.Country= '${country}'
-            ORDER BY Country, Popularity desc, RatingValue desc`, function (error, results, fields) {
+            ORDER BY Country, Popularity desc, RatingValue desc
+            LIMIT 10`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)

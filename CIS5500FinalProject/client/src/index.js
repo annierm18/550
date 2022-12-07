@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 
 import HomePage from './pages/HomePage';
-import PlayersPage from './pages/PlayersPage';
+import CountryPage from './pages/CountryPage';
 import 'antd/dist/antd.css';
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -26,11 +26,11 @@ ReactDOM.render(
 								<HomePage />
 							)}/>
         <Route exact
-							path="/players"
+							path="/country"
 							render={() => (
-								<PlayersPage />
+								<CountryPage />
 							)}
-							component={PlayersPage}/>
+							component={CountryPage}/>
         <Route exact
 							path="/matches"
 							render={() => (

@@ -20,8 +20,8 @@ function NavBar() {
                 </div> */}
                 <ul>
                     <li><Link to="/">Home</Link></li>
-                    <li><Link to="/rec">Recomendations</Link></li>
-                    <li><Link to="/">Extra Link</Link></li>
+                    <li><Link to="/rec">Recommendations</Link></li>
+                    <li><Link to="/country">Country</Link></li>
                 </ul>
                 {/* <div className="menu">
                     <label for='chk1'>
