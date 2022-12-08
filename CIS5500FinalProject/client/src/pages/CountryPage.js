@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, FormInput, FormGroup, Button, Card, CardBody, CardTitle, Progress, Dropdown } from "shards-react";
-import "./RecommendationsPage.css";
+import "./CountryPage.css";
 import MovieCard from '../components/MovieCard';
 import DropDown from '../components/DropDown';
 import CountriesMap from '../components/CountriesMap';
@@ -65,7 +65,7 @@ class CountryPage extends React.Component {
             getCountry(this.state.country).then(res => {
             
                 this.setState({ movieDetails: res.results})
-            })}, 3000)
+            })}, 200)
          
 
     }
@@ -110,8 +110,6 @@ class CountryPage extends React.Component {
                             </div>
                             ) : (
                             <div className="empty">
-                                <h2>{this.state.movieDetails?.length}</h2>
-                                <h2>No movies found</h2>
                             </div>
                             )}
 

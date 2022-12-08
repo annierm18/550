@@ -17,7 +17,7 @@ export const CountriesMap = ({ countries, onClick, country  }) => {
         const name = countryVal.properties.ADMIN
         const numText = countryVal.properties.numText;
         layer.bindPopup(
-            `In ${name}, there have been ${numText} movies or shows produced`)
+            `In ${name}, there have been ${numText} movies or shows produced. Click on the top banner to learn more about this country's cinema`)
 
         layer.on("click", (e) => {
             handleChange(name )})
