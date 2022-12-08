@@ -127,7 +127,8 @@ class RecommendationsPage extends React.Component {
                 <MenuBar />
                 <Form style={{ width: '80vw', margin: '0 auto', marginTop: '5vh' }}>
                 <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
-                    <h1>Movie Browser</h1>
+                    <h1>Explore New Movies!</h1>
+                    <h3>Find popular movies in your favorite genre, language, and release year</h3>
                     </div>
                     <Row>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>

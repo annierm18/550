@@ -37,7 +37,15 @@ h1 {
   /* -webkit-background-clip: text; */
   /* -webkit-text-fill-color: transparent; */
   width: fit-content;
-  margin: 4rem 0 4rem;
+  margin: 4rem 0 1rem;
+}
+
+h3 {
+  font-size: 1rem;
+  letter-spacing: 0.9px;
+  color: #f9d3b4;
+  width: fit-content;
+  margin: 1rem 0 1.5rem;
 }
 
 .empty {
