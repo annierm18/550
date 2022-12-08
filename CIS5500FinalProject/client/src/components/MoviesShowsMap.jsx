@@ -26,7 +26,7 @@ export const MoviesShowsMap = () => {
       }, [country]); 
 
     function handleChange (country) {
-       setCountry( country);
+       setCountry(country);
     }
 
     return ( 
@@ -36,13 +36,13 @@ export const MoviesShowsMap = () => {
             ) : (
                 <div>
                      {country.length === 0 ? (
-                    <span style={{height: "5vh", display: "block", fontSize: "20px", size: "50em", backgroundColor: "white", textAlign: "center"}}>
+                    <span style={{height: "8vh",  boxShadow: "10px 0 10px #000", color: "white", display: "block", fontSize: "30px", size: "50em", textAlign: "center"}}>
                         <p>Click on each country to see how many movies and tv shows were produced there!</p>
                     </span>
                 ) : (
-                    <span style={{height: "5vh", display: "block", fontSize: "20px", backgroundColor: "white", textAlign:"center"}}>
+                    <span style={{height: "8vh", boxShadow: "10px 0 10px #000", color: "grey", display: "block", fontSize: "30px", textAlign:"center"}}>
                         <Link 
-                            style={{width: "100%", color: "black",  size: "50em", backgroundColor: "white", alignContent: "center"}}
+                            style={{width: "100%", color: "white",  alignContent: "center"}}
                             to={{ 
                             pathname: "/country", 
                             state: {country: country }

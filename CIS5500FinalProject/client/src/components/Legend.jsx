@@ -13,13 +13,14 @@ export const Legend = ({legendItems}) => {
                 style={{
                     backgroundColor: item.color,
                     flex: 1,
+                    boxShadow: "10px 0 0 0",
                     display: "flex",
                     alignItems: "center", //vertical
                     justifyContent: "center", //horizontal
                     color: item.textColor,
-                    height: "10vh",
+                    height: "6vh",
                     fontWeight: "bolder",
-                    fontSize: "1.5em"
+                    fontSize: "1.2em"
                 }}
                 >
                     <span>{item.title}</span>
