@@ -37,6 +37,7 @@ class CountryPage extends React.Component {
             releaseYearQuery: "",
             loading: true,
             country: "",
+            numProduced: 0,
             movieResults: [],
             selectedMovieId: window.location.search ? window.location.search.substring(1).split('=')[1] : 0,
             selectedMovieDetails: null,
@@ -77,6 +78,13 @@ class CountryPage extends React.Component {
         catch(error) {
             this.setState({ country : "United States of America" })
         } 
+
+        try {
+            this.setState({ numProduced : this.props.location.state.numProduced })
+        }
+        catch(error) {
+            this.setState({ numProduced : 15902 })
+        } 
         
         this.setState({ loading: false });
         this.updateDropdown();
@@ -86,7 +94,8 @@ class CountryPage extends React.Component {
     //will set wahtever item the user selects in the dropdown
     handleChange(value) {
 
-        this.setState({ country: value});
+        this.setState({ country: value.ADMIN});
+        this.setState({ numProduced: value.num});
         this.updateDropdown();
     }
 
@@ -96,6 +105,7 @@ class CountryPage extends React.Component {
             <div>
                 <MenuBar />
                 <h1>{this.state.country}</h1>
+                <p>Did you know? {this.state.country} has produced {this.state.numProduced} movies and tv shows! </p>
                 <DropDown
                     trigger={<button>{this.state.country}</button>}
                     onClick={this.handleChange}

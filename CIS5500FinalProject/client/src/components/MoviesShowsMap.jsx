@@ -11,6 +11,7 @@ export const MoviesShowsMap = () => {
 
     const [ countries, setCountries ] = useState([]);
     const [ country, setCountry ] = useState("");
+    const [ numProduced, setNumProduced ] = useState(0);
    // const [ onClick, setOnClick] = useState("");
     const LegendItemsInReverse = [...LegendItems].reverse();
 
@@ -26,7 +27,8 @@ export const MoviesShowsMap = () => {
       }, [country]); 
 
     function handleChange (country) {
-       setCountry(country);
+       setCountry(country.ADMIN);
+       setNumProduced(country.numText);
     }
 
     return ( 
@@ -45,7 +47,7 @@ export const MoviesShowsMap = () => {
                             style={{width: "100%", color: "white",  alignContent: "center"}}
                             to={{ 
                             pathname: "/country", 
-                            state: {country: country }
+                            state: {country: country, numProduced: numProduced}
                             }}> 
                             Click HERE to learn more about cinema in {country}!
                         </Link>     

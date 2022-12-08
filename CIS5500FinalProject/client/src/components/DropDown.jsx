@@ -41,7 +41,7 @@ const DropDown = ({ trigger, onClick }) => {
                 <li 
                     key={index} 
                     onClick={e => {
-                        handleChange(menuItem.properties.ADMIN);
+                        handleChange(menuItem.properties);
                     }}
                     className="menu-item">
                         {menuItem.properties.ADMIN}

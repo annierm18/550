@@ -20,7 +20,7 @@ export const CountriesMap = ({ countries, onClick, country  }) => {
             `In ${name}, there have been ${numText} movies or shows produced. Click on the top banner to learn more about this country's cinema`)
 
         layer.on("click", (e) => {
-            handleChange(name )})
+            handleChange(countryVal.properties)})
     }
 
     const handleChange = (e) => {
