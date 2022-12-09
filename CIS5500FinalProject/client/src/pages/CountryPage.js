@@ -1,11 +1,9 @@
 import React from 'react';
 import { Form, FormInput, FormGroup, Button, Card, CardBody, CardTitle, Progress, Dropdown } from "shards-react";
 import "./CountryPage.css";
-import MovieCard from '../components/MovieCard';
+import MovieCardCountry from '../components/MovieCardCountry';
 import DropDown from '../components/DropDown';
 import CountriesMap from '../components/CountriesMap';
-
-
 
 
 import {
@@ -104,18 +102,42 @@ class CountryPage extends React.Component {
         return (
             <div>
                 <MenuBar />
-                <h1>{this.state.country}</h1>
-                <p>Did you know? {this.state.country} has produced {this.state.numProduced} movies and tv shows! </p>
+                <h1 style={{ paddingLeft: '20px'  }}>{this.state.country}</h1>
+                <p style={{ 
+                    paddingLeft: '20px', 
+                    color: "#f9d3b4", 
+                    fontWeight: "400", 
+                    fontFamily: "Poppins,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif"  
+                }}>Did you know? {this.state.country} has produced {this.state.numProduced} movies and tv shows! </p>
                 <DropDown
-                    trigger={<button>{this.state.country}</button>}
+                    trigger={
+                        <div style={{ marginTop: "20px", marginBotton: "10px", }}>
+                            <p style={{ 
+                                borderRadius: '0.375', 
+                                width: "15vw", 
+                                textAlign: "center", 
+                                float:"left", 
+                                backgroundColor: "white", 
+                                paddingBottom: "2px", 
+                                marginRight: "5px", 
+                                fontFamily: "Poppins,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif"}}> 
+                                {this.state.country}
+                            </p>
+                            <button style={{ float:"left", fontFamily: "Poppins,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif" }} >
+                                Click Here
+                            </button>
+                        </div>
+                    }
                     onClick={this.handleChange}
                 />
                 <Divider />
 
                             {this.state.movieDetails?.length > 0 ? (
-                                <div className="container">
+                                <div className="container" style={{ width: '70vw' }}>
                                     {this.state.movieDetails.map((movie) => (
-                                        <MovieCard movie={movie} />
+                                    
+                                        <MovieCardCountry movie={movie} />
+                                    
                                 ))}
                             </div>
                             ) : (

@@ -27,6 +27,7 @@ const DropDown = ({ trigger, onClick }) => {
 
     const handleChange = (e) => {
         onClick(e);
+        setOpen(!open);
     }
 
    
@@ -52,25 +53,6 @@ const DropDown = ({ trigger, onClick }) => {
           </div>
         );
 };
-/*
-
-    return ( 
-        <div>
-            <CalciteSelect>
-                <div></div>
-                {countries.map((item)=>(
-                    <CalciteOption 
-                        key={item.title}
-
-                        >
-                            
-                    </CalciteOption>
-                 ))}
-            </CalciteSelect>
-        </div>
-     );
-     }
-     */
 
 
 export default DropDown;
