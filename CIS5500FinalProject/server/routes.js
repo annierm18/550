@@ -51,8 +51,6 @@ async function movie(req, res) {
     var title = req.query.title;
     const year = req.query.year;
 
-    // console.log(title);
-
     if (title.includes("'")) {
         title = title.replace("'", "''");
         // console.log(title);
@@ -70,7 +68,7 @@ async function movie(req, res) {
             Comp as (
               SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, GROUP_CONCAT(c.Company SEPARATOR ', ') as Companies
               FROM G g
-                  LEFT JOIN ProductionCompanies c ON g.Title = c.Title AND g.Year = c.Year
+                 LEFT JOIN ProductionCompanies c ON g.Title = c.Title AND g.Year = c.Year
               GROUP BY g.title, g.year
             ),
             C as (
@@ -82,13 +80,13 @@ async function movie(req, res) {
             Spoken as (
               SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Companies, g.Countries, GROUP_CONCAT(sp.Language SEPARATOR ', ') as SpokenLanguages
               FROM C g
-                  LEFT JOIN SpokenLanguage sp ON g.Title = sp.Title AND g.Year = sp.Year
+                 LEFT JOIN SpokenLanguage sp ON g.Title = sp.Title AND g.Year = sp.Year
               GROUP BY g.title, g.year
             ),
             Rating as (
               SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Companies, g.Countries, g.SpokenLanguages, sp.PosterLink, sp.URL, sp.RatingValue, sp.RatingCount
               FROM Spoken g
-                  LEFT JOIN RatingsLinks sp ON g.Title = sp.Title AND g.Year = sp.Year
+                  JOIN RatingsLinks sp ON g.Title = sp.Title AND g.Year = sp.Year
               GROUP BY g.title, g.year
             )
             SELECT *
@@ -132,12 +130,13 @@ async function get_all_from_country(req, res) {
     // NaN refers to Not-a-Number
     if (req.query.country) {
         connection.query(`
-            SELECT distinct(mt.Title) as Title, Popularity, RatingValue, Country, PosterLink
+            SELECT distinct(mt.Title) as Title, Popularity, RatingValue, Country, PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
             JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
             JOIN Countries c on mt.Year = c.Year and mt.Title = c.Title
             WHERE c.Country= '${country}'
-            ORDER BY Country, Popularity desc, RatingValue desc`, function (error, results, fields) {
+            ORDER BY Country, Popularity desc, RatingValue desc
+            LIMIT 10`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -159,7 +158,7 @@ async function most_popular_movies(req, res) {
             FROM MoviesTVShows mt
             JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
             ORDER BY Popularity desc, RatingValue desc
-            LIMIT 10`, function (error, results, fields) {
+            LIMIT 100`, function (error, results, fields) {
 
         if (error) {
             console.log(error)

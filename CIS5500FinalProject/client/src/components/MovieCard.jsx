@@ -13,7 +13,7 @@ const MovieCard = ({ movie: { Title, PosterLink, Year} }) => {
       <div>
       {/* <Link to="/players"> */}
       <Link to={{ 
-        pathname: "/players", 
+        pathname: "/movieDetails", 
         state: {movie: { Title, Year} }
         }}>
           <img src={PosterLink !== "N/A" ? PosterLink : "https://via.placeholder.com/400"} alt={Title}/>

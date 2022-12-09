@@ -2,6 +2,8 @@ import React from 'react';
 import { Form, FormInput, FormGroup, Button, Card, CardBody, CardTitle, Progress } from "shards-react";
 import "./RecommendationsPage.css";
 import MovieCard from '../components/MovieCard';
+// import Pagination from '../components/Pagination';
+import "antd/dist/antd.css";
 
 
 import {
@@ -20,17 +22,9 @@ import { getFilteredMovieResults, getTenMostPopular } from '../fetcher'
 import MenuBar from '../components/MenuBar';
 
 const { Column, ColumnGroup } = Table;
-const movie1 = [{"Title":"...All the Marbles","PosterLink":"https://m.media-amazon.com/images/M/MV5BNWVmNTc5NGMtMDIzMC00NTczLWFhOWQtNDYzOTAwMjU1ODc0XkEyXkFqcGdeQXVyMjI4MjA5MzA@._V1_.jpg"},
-    {"Title":"Zombies of the Stratosphere","PosterLink":"https://m.media-amazon.com/images/M/MV5BMTc5NjA5MTQ4M15BMl5BanBnXkFtZTcwMzU3MjE5Mw@@._V1_.jpg"},
-    {"Title":"Zone Troopers","PosterLink":"https://m.media-amazon.com/images/M/MV5BNGM4ZmQwMDItZmYxYS00YTBhLTg5NjktYTlhZGI1NThmZGY1XkEyXkFqcGdeQXVyMjA0MzYwMDY@._V1_.jpg"},
-    {"Title":"Zoolander 2","PosterLink":"https://m.media-amazon.com/images/M/MV5BMjI2MjQxNTQzOV5BMl5BanBnXkFtZTgwMDE2MTY2NzE@._V1_.jpg"},
-    {"Title":"Zoom","PosterLink":"https://m.media-amazon.com/images/M/MV5BMTM0NjczMzUyM15BMl5BanBnXkFtZTcwMDEwMjQzMQ@@._V1_.jpg"},
-    {"Title":"Zoombies","PosterLink":"https://m.media-amazon.com/images/M/MV5BMDZiMTU0ZmUtY2U1Ni00MzY3LWI4NjMtNzY4ZDFkYmQ5OGM3XkEyXkFqcGdeQXVyNjUyNjMzMzU@._V1_.jpg"},
-    {"Title":"Zulu","PosterLink":"https://m.media-amazon.com/images/M/MV5BYzdlYmQ3MWMtMDY3My00MzVmLTg0YmMtYjRlZDUzNjBlMmE0L2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyNjc1NTYyMjg@._V1_.jpg"},
-    {"Title":"Zulu","PosterLink":"https://m.media-amazon.com/images/M/MV5BMjA0NjE1OTI0M15BMl5BanBnXkFtZTgwMDkyNTM3MDE@._V1_.jpg"}];
+const pageSize = 15;
 
-
-class MatchesPage extends React.Component {
+class RecommendationsPage extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -40,8 +34,11 @@ class MatchesPage extends React.Component {
             movieResults: [],
             selectedMovieId: window.location.search ? window.location.search.substring(1).split('=')[1] : 0,
             selectedMovieDetails: null,
-            movieDetails: []
-
+            movieDetails: [],
+            totalPage:0,
+            current:1,
+            minIndex: 0,
+            maxIndex: 0
         }
 
         this.handleGenreQueryChange = this.handleGenreQueryChange.bind(this)
@@ -50,8 +47,6 @@ class MatchesPage extends React.Component {
         this.updateSearchResults = this.updateSearchResults.bind(this)
         this.goToMatch = this.goToMatch.bind(this)
     }
-
-
 
     handleGenreQueryChange(event) {
         this.setState({ genreQuery: event.target.value })
@@ -72,26 +67,59 @@ class MatchesPage extends React.Component {
     }
 
     updateSearchResults() {
-        //TASK 11: call getMatchSearch and update matchesResults in state. See componentDidMount() for a hint
+        
         getFilteredMovieResults(this.state.languageQuery, this.state.genreQuery, this.state.releaseYearQuery).then(res => {
             console.log("PRINTING: " +  " langauge:" + this.state.languageQuery + " genre" + this.state.genreQuery + " releaseYear" + this.state.releaseYearQuery)
-            this.setState({ movieDetails: res.results })
-            console.log("RESULTS " + this.state.movieDetails)
+            this.setState({ movieDetails: res.results})
+            //localStorage.setItem('movieDetails', JSON.stringify(res.results))
+            localStorage.setItem('movieDetailsState', JSON.stringify(this.state))
         })
     }
 
     componentDidMount() {
-        getTenMostPopular().then(res => {
-            this.setState({ movieDetails: res.results})
-        })
 
-        // getFilteredMovieResults(this.state.genreQuery, this.state.languageQuery, this.state.releaseYearQuery).then(res => {
-        //     console.log("PRINTING: " + this.state.movieDetails)
-        //     this.setState({movieDetails: res.results})
-        // })
-        
-        
+        if(this.props.history.action == "POP") {
+            console.log("HEREEEEE")
+            if (localStorage.getItem('movieDetailsState')) {
+                //this.state = JSON.parse(localStorage.getItem('movieDetailsState'))
+                this.setState(JSON.parse(localStorage.getItem('movieDetailsState')))
+                console.log("LOCAL STORAGE MOVIES:: " + localStorage.getItem('movieDetailsState'))
+                // this.setState({
+                //     movieDetails: JSON.parse(localStorage.getItem('movieDetails')),
+                //     totalPage: JSON.parse(localStorage.getItem('movieDetails')) / pageSize, 
+                //     minIndex: 0, 
+                //     maxIndex: pageSize
+                // })
+            }
+    } else {
+        getTenMostPopular().then(res => {
+            this.setState({ 
+                movieDetails: res.results, 
+                totalPage: res.results.length / pageSize, 
+                minIndex: 0, 
+                maxIndex: pageSize})
+                localStorage.setItem('movieDetailsState', JSON.stringify(this.state))
+        })
+        //.finally(localStorage.setItem('movieDetails', JSON.stringify(this.state.movieDetails)))
+        // .then(localStorage.setItem('movieDetailsState', JSON.stringify(this.state)))
+
     }
+
+        {console.log("RESULTS PRINT2!!!: " + JSON.stringify(this.props))}
+
+        {console.log("Final State at end of Mount:: "+ JSON.stringify(this.state))}
+    }
+
+
+    handleChange = (page) => {
+        this.setState({
+          current: page,
+          minIndex: (page - 1) * pageSize,
+          maxIndex: page * pageSize
+        });
+        localStorage.setItem('movieDetailsState', JSON.stringify(this.state))
+        {console.log("PAGE????: " + page)}
+      };
 
     render() {
         return (
@@ -99,24 +127,25 @@ class MatchesPage extends React.Component {
                 <MenuBar />
                 <Form style={{ width: '80vw', margin: '0 auto', marginTop: '5vh' }}>
                 <div style={{ width: '70vw', margin: '0 auto', marginTop: '5vh' }}>
-                    <h1>Find Your Favorite Movie!</h1>
+                    <h1>Explore New Movies!</h1>
+                    <h3>Find popular movies in your favorite genre, language, and release year</h3>
                     </div>
                     <Row>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
-                            <label>Genre</label>
+                            <label><b>Genre</b></label>
                             <FormInput placeholder="Genre" defaultValue={this.state.genreQuery} onChange={this.handleGenreQueryChange} />
                         </FormGroup></Col>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
-                            <label>Language</label>
+                            <label><b>Language</b></label>
                             <FormInput placeholder="en" defaultValue={this.state.languageQuery} onChange={this.handleLanguageQueryChange} />
                         </FormGroup></Col>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
-                            <label>Release Year</label>
+                            <label><b>Release Year</b></label>
                             <FormInput placeholder="1999" defaultValue={this.state.releaseYearQuery} onChange={this.handleReleaseYearQueryChange} />
                         </FormGroup></Col>
                         
-                        <Col flex={2}><FormGroup style={{ width: '10vw' }}>
-                            <Button style={{ marginTop: '2.4vh' }} onClick={this.updateSearchResults}>Search</Button>
+                        <Col flex={2}><FormGroup style={{ width: '10vw', margin: '0 auto'}}>
+                            <Button theme="light" style={{ marginTop: '1.8rem' }} onClick={this.updateSearchResults}>Search</Button>
                         </FormGroup></Col>
 
                     </Row>
@@ -124,39 +153,38 @@ class MatchesPage extends React.Component {
 
                 </Form>
                 <Divider />
-                {/* {movie1?.length > 0 ? (
-                                <div className="container">
-                                    {movie1.map((movie) => (
-                                        <MovieCard movie={movie} />
-                                ))}
-                            </div>
-                            ) : (
-                            <div className="empty">
-                                <h2>No movies found</h2>
-                            </div>
-                            )} */}
-
-
+                {console.log("IS IT HERE?")}
                             {this.state.movieDetails?.length > 0 ? (
+                                <div>
                                 <div className="container">
-                                    {this.state.movieDetails.map((movie) => (
+                                    {this.state.movieDetails.map((movie, index) => index >= this.state.minIndex && index < this.state.maxIndex &&  (
                                         <MovieCard movie={movie} />
+                                        
                                 ))}
+                                
+                            </div>
+                            <div className='pagination'>
+                            <Pagination
+                                    pageSize = {pageSize}
+                                    current = {this.state.current}
+                                    total = {this.state.movieDetails.length}
+                                    onChange={this.handleChange}
+                                    // pageSizeOptions= {[]}
+                                    showSizeChanger= {false}
+
+                                />
+                            </div>
                             </div>
                             ) : (
                             <div className="empty">
-                                {console.log("PRINTING!!!: " + this.state.movieDetails)}
-                                <h2>{this.state.movieDetails?.length}</h2>
-                                <h2>No movies found</h2>
+                                <h2>No movies found.   Try another filter!</h2>
                             </div>
                             )}
-
- 
 
             </div>
         )
     }
 }
 
-export default MatchesPage
+export default RecommendationsPage
 
