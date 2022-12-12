@@ -56,41 +56,39 @@ async function movie(req, res) {
         // console.log(title);
     }
 
+    // connection.query(`
+    //     drop view Movie_Info;
+    // `)
+
+    // connection.query(`
+    //     CREATE VIEW Movie_Info(Title, Year, Language, Overview, Popularity, Runtime, Type, Genres, Countries, PosterLink, URL) AS
+    //     With G as (
+    //     SELECT s.Title, s.Year, s.Language, s.Overview, s.Popularity, s.Runtime, s.Type, GROUP_CONCAT(g.Genre SEPARATOR ', ') as Genres
+    //     FROM MoviesTVShows s
+    //         LEFT JOIN Genres g ON s.Title = g.Title AND s.Year = g.Year
+    //     GROUP BY s.title, s.year
+    //     ),
+    //     C as (
+    //     SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, GROUP_CONCAT(c.Country SEPARATOR ', ') as Countries
+    //     FROM G g
+    //         LEFT JOIN Countries c ON g.Title = c.Title AND g.Year = c.Year
+    //     GROUP BY g.title, g.year
+    //     ),
+    //     Rating as (
+    //     SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Countries, sp.PosterLink, sp.URL
+    //     FROM C g
+    //         JOIN RatingsLinks sp ON g.Title = sp.Title AND g.Year = sp.Year
+    //     GROUP BY g.title, g.year
+    //     )
+    //     SELECT *
+    //     From Rating;
+    // `);
+
     // NaN refers to Not-a-Number
     if (req.query.title && req.query.year && !isNaN(req.query.year)) {
         connection.query(`
-            With G as (
-              SELECT s.Title, s.Year, s.Language, s.Overview, s.Popularity, s.Runtime, s.Type, GROUP_CONCAT(g.Genre SEPARATOR ', ') as Genres
-              FROM MoviesTVShows s
-                  LEFT JOIN Genres g ON s.Title = g.Title AND s.Year = g.Year
-              GROUP BY s.title, s.year
-            ),
-            Comp as (
-              SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, GROUP_CONCAT(c.Company SEPARATOR ', ') as Companies
-              FROM G g
-                 LEFT JOIN ProductionCompanies c ON g.Title = c.Title AND g.Year = c.Year
-              GROUP BY g.title, g.year
-            ),
-            C as (
-              SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Companies, GROUP_CONCAT(c.Country SEPARATOR ', ') as Countries
-              FROM Comp g
-                  LEFT JOIN Countries c ON g.Title = c.Title AND g.Year = c.Year
-              GROUP BY g.title, g.year
-            ),
-            Spoken as (
-              SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Companies, g.Countries, GROUP_CONCAT(sp.Language SEPARATOR ', ') as SpokenLanguages
-              FROM C g
-                 LEFT JOIN SpokenLanguage sp ON g.Title = sp.Title AND g.Year = sp.Year
-              GROUP BY g.title, g.year
-            ),
-            Rating as (
-              SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Companies, g.Countries, g.SpokenLanguages, sp.PosterLink, sp.URL, sp.RatingValue, sp.RatingCount
-              FROM Spoken g
-                  JOIN RatingsLinks sp ON g.Title = sp.Title AND g.Year = sp.Year
-              GROUP BY g.title, g.year
-            )
             SELECT *
-            From Rating
+            From Movie_Info
             WHERE Title = '${title}' AND Year = '${year}'`, function (error, results, fields) {
 
             if (error) {
@@ -180,6 +178,11 @@ async function filters(req, res) {
     const language = req.query.language; /* ? req.params.language : 'en'; */
     const genre = req.query.genre;
     const release_year = req.query.release_year;
+
+    connection.query(`
+        Create INDEX ty on MoviesTVShows(Title, Year);
+    `);
+
 
     /* ADDITIONAL NICE TO HAVE FILTER PARAMETERS WE CAN ADD LATER IF WE'D LIKE
     const runtime = req.query.runtime;
