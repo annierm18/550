@@ -84,12 +84,24 @@ async function movie(req, res) {
     //     From Rating;
     // `);
 
+
+    // SELECT *
+    // From Movie_Info
+    // WHERE Title = '${title}' AND Year = '${year}'
+
     // NaN refers to Not-a-Number
     if (req.query.title && req.query.year && !isNaN(req.query.year)) {
         connection.query(`
-            SELECT *
-            From Movie_Info
-            WHERE Title = '${title}' AND Year = '${year}'`, function (error, results, fields) {
+        SELECT r.Title, r.Year, s.Language, s.Overview, s.Popularity, s.Runtime, s.Type,
+            GROUP_CONCAT(DISTINCT g.Genre SEPARATOR ', ') as Genres,
+            GROUP_CONCAT(DISTINCT cnt.Country SEPARATOR ', ') as Countries,
+            r.PosterLink, r.URL
+        FROM RatingsLinks r
+        LEFT JOIN Genres g ON r.Title = g.Title AND r.Year = g.Year
+        LEFT JOIN Countries cnt ON r.Title = cnt.Title AND r.Year = cnt.Year
+        Join MoviesTVShows s on r.Year = s.Year AND r.Title = s.Title
+        WHERE s.Title = '${title}' AND s.Year='${year}'
+        GROUP BY r.Title, r.Year`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
