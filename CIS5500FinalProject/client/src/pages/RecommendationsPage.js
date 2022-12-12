@@ -1,15 +1,12 @@
 import React from 'react';
-import { Form, FormInput, FormGroup, Button, Card, CardBody, CardTitle, Progress } from "shards-react";
+import { Form, FormInput, FormGroup, Button } from "shards-react";
 import "./RecommendationsPage.css";
 import MovieCard from '../components/MovieCard';
-// import Pagination from '../components/Pagination';
 import "antd/dist/antd.css";
 
 
 import {
-    Table,
     Pagination,
-    Select,
     Row,
     Col,
     Divider,
@@ -21,7 +18,6 @@ import { getFilteredMovieResults, getTenMostPopular } from '../fetcher'
 
 import MenuBar from '../components/MenuBar';
 
-const { Column, ColumnGroup } = Table;
 const pageSize = 15;
 
 class RecommendationsPage extends React.Component {
@@ -32,8 +28,6 @@ class RecommendationsPage extends React.Component {
             languageQuery: "",
             releaseYearQuery: "",
             movieResults: [],
-            selectedMovieId: window.location.search ? window.location.search.substring(1).split('=')[1] : 0,
-            selectedMovieDetails: null,
             movieDetails: [],
             totalPage:0,
             current:1,
@@ -45,7 +39,6 @@ class RecommendationsPage extends React.Component {
         this.handleLanguageQueryChange = this.handleLanguageQueryChange.bind(this)
         this.handleReleaseYearQueryChange = this.handleReleaseYearQueryChange.bind(this)
         this.updateSearchResults = this.updateSearchResults.bind(this)
-        this.goToMatch = this.goToMatch.bind(this)
     }
 
     handleGenreQueryChange(event) {
@@ -58,38 +51,23 @@ class RecommendationsPage extends React.Component {
     }
 
     handleReleaseYearQueryChange(event) {
-        // TASK 10: update state variables appropriately. See handleAwayQueryChange(event) for reference
         this.setState({ releaseYearQuery: event.target.value })
 
-    }
-    goToMatch(matchId) {
-        window.location = `/matches?id=${matchId}`
     }
 
     updateSearchResults() {
         
         getFilteredMovieResults(this.state.languageQuery, this.state.genreQuery, this.state.releaseYearQuery).then(res => {
-            console.log("PRINTING: " +  " langauge:" + this.state.languageQuery + " genre" + this.state.genreQuery + " releaseYear" + this.state.releaseYearQuery)
             this.setState({ movieDetails: res.results})
-            //localStorage.setItem('movieDetails', JSON.stringify(res.results))
             localStorage.setItem('movieDetailsState', JSON.stringify(this.state))
         })
     }
 
     componentDidMount() {
 
-        if(this.props.history.action == "POP") {
-            console.log("HEREEEEE")
+        if(this.props.history.action === "POP") {
             if (localStorage.getItem('movieDetailsState')) {
-                //this.state = JSON.parse(localStorage.getItem('movieDetailsState'))
                 this.setState(JSON.parse(localStorage.getItem('movieDetailsState')))
-                console.log("LOCAL STORAGE MOVIES:: " + localStorage.getItem('movieDetailsState'))
-                // this.setState({
-                //     movieDetails: JSON.parse(localStorage.getItem('movieDetails')),
-                //     totalPage: JSON.parse(localStorage.getItem('movieDetails')) / pageSize, 
-                //     minIndex: 0, 
-                //     maxIndex: pageSize
-                // })
             }
     } else {
         getTenMostPopular().then(res => {
@@ -100,14 +78,7 @@ class RecommendationsPage extends React.Component {
                 maxIndex: pageSize})
                 localStorage.setItem('movieDetailsState', JSON.stringify(this.state))
         })
-        //.finally(localStorage.setItem('movieDetails', JSON.stringify(this.state.movieDetails)))
-        // .then(localStorage.setItem('movieDetailsState', JSON.stringify(this.state)))
-
     }
-
-        {console.log("RESULTS PRINT2!!!: " + JSON.stringify(this.props))}
-
-        {console.log("Final State at end of Mount:: "+ JSON.stringify(this.state))}
     }
 
 
@@ -118,7 +89,6 @@ class RecommendationsPage extends React.Component {
           maxIndex: page * pageSize
         });
         localStorage.setItem('movieDetailsState', JSON.stringify(this.state))
-        {console.log("PAGE????: " + page)}
       };
 
     render() {
@@ -133,7 +103,7 @@ class RecommendationsPage extends React.Component {
                     <Row>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
                             <label><b>Genre</b></label>
-                            <FormInput placeholder="Genre" defaultValue={this.state.genreQuery} onChange={this.handleGenreQueryChange} />
+                            <FormInput placeholder="Comedy" defaultValue={this.state.genreQuery} onChange={this.handleGenreQueryChange} />
                         </FormGroup></Col>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
                             <label><b>Language</b></label>
@@ -141,7 +111,7 @@ class RecommendationsPage extends React.Component {
                         </FormGroup></Col>
                         <Col flex={2}><FormGroup style={{ width: '20vw', margin: '0 auto' }}>
                             <label><b>Release Year</b></label>
-                            <FormInput placeholder="1999" defaultValue={this.state.releaseYearQuery} onChange={this.handleReleaseYearQueryChange} />
+                            <FormInput placeholder="2001" defaultValue={this.state.releaseYearQuery} onChange={this.handleReleaseYearQueryChange} />
                         </FormGroup></Col>
                         
                         <Col flex={2}><FormGroup style={{ width: '10vw', margin: '0 auto'}}>
@@ -153,7 +123,6 @@ class RecommendationsPage extends React.Component {
 
                 </Form>
                 <Divider />
-                {console.log("IS IT HERE?")}
                             {this.state.movieDetails?.length > 0 ? (
                                 <div>
                                 <div className="container">
@@ -169,7 +138,6 @@ class RecommendationsPage extends React.Component {
                                     current = {this.state.current}
                                     total = {this.state.movieDetails.length}
                                     onChange={this.handleChange}
-                                    // pageSizeOptions= {[]}
                                     showSizeChanger= {false}
 
                                 />

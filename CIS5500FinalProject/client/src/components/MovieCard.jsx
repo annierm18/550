@@ -1,9 +1,8 @@
 import React from 'react';
-// import { TouchableOpacity } from 'react-native';
-import {BrowserRouter as Router, Link, Redirect} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 
-const MovieCard = ({ movie: { Title, PosterLink, Year} }) => {
+const MovieCard = ({ movie: { Title, PosterLink, Year, Type} }) => {
   return (
     <div className="movie">
       <div>
@@ -11,22 +10,17 @@ const MovieCard = ({ movie: { Title, PosterLink, Year} }) => {
       </div>
 
       <div>
-      {/* <Link to="/players"> */}
       <Link to={{ 
         pathname: "/movieDetails", 
         state: {movie: { Title, Year} }
         }}>
           <img src={PosterLink !== "N/A" ? PosterLink : "https://via.placeholder.com/400"} alt={Title}/>
         </Link>
-        {/* </Link> */}
       </div>
 
       <div>
-        <span>Movie</span>
+        <span>{Type}</span>
         <h3>{Title}</h3>
-        {/* <span> Test */}
-        {/* <Redirect to={{ pathname: '/players', movie: { Title, PosterLink, Year} }} /> */}
-        {/* </span> */}
       </div>
      
     </div>

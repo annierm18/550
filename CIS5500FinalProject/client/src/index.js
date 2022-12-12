@@ -12,7 +12,7 @@ import 'antd/dist/antd.css';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "shards-ui/dist/css/shards.min.css"
-import MatchesPage from './pages/MatchesPage';
+// import MatchesPage from './pages/MatchesPage';
 import RecommendationsPage from './pages/RecommendationsPage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
 
@@ -31,12 +31,12 @@ ReactDOM.render(
 								<CountryPage />
 							)}
 							component={CountryPage}/>
-        <Route exact
+        {/* <Route exact
 							path="/matches"
 							render={() => (
 								<MatchesPage />
 							)}
-							/>
+							/> */}
 				<Route exact
 							path="/rec"
 							render={() => (
