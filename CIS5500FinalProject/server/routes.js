@@ -92,7 +92,7 @@ async function movie(req, res) {
     // NaN refers to Not-a-Number
     if (req.query.title && req.query.year && !isNaN(req.query.year)) {
         connection.query(`
-        SELECT r.Title, r.Year, s.Language, s.Overview, s.Popularity, s.Runtime, s.Type,
+        SELECT s.Title, s.Year, s.Language, s.Overview, s.Popularity, s.Runtime, s.Type,
             GROUP_CONCAT(DISTINCT g.Genre SEPARATOR ', ') as Genres,
             GROUP_CONCAT(DISTINCT cnt.Country SEPARATOR ', ') as Countries,
             r.PosterLink, r.URL
@@ -191,11 +191,6 @@ async function filters(req, res) {
     const genre = req.query.genre;
     const release_year = req.query.release_year;
 
-    connection.query(`
-        Create INDEX ty on MoviesTVShows(Title, Year);
-    `);
-
-
     /* ADDITIONAL NICE TO HAVE FILTER PARAMETERS WE CAN ADD LATER IF WE'D LIKE
     const runtime = req.query.runtime;
     const rating = req.query.rating; */
@@ -207,12 +202,13 @@ async function filters(req, res) {
     } else if (req.query.language && !req.query.genre && !req.query.release_year) { // ONLY language is specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
             FROM MoviesTVShows mt
-               JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-               JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE mt.Language = '${language}'
-            GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+            INNER JOIN RatingsLinks rl
+            ON mt.Title = rl.Title AND mt.Year = rl.Year
+            INNER JOIN Genres g
+            ON mt.Title = g.Title AND mt.Year = g.Year
+            WHERE mt.Language = '${language}'`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -225,12 +221,13 @@ async function filters(req, res) {
     } else if (!req.query.language && req.query.genre && !req.query.release_year) { // ONLY genre is specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
             FROM MoviesTVShows mt
-               JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-               JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE  g.genre LIKE '${genre}'
-            GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+            INNER JOIN RatingsLinks rl
+            ON mt.Title = rl.Title AND mt.Year = rl.Year
+            INNER JOIN Genres g
+            ON mt.Title = g.Title AND mt.Year = g.Year
+            WHERE g.genre = '${genre}'`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -243,12 +240,13 @@ async function filters(req, res) {
     } else if (!req.query.language && !req.query.genre && req.query.release_year) { // ONLY release_year is specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
             FROM MoviesTVShows mt
-               JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-               JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE mt.year = '${release_year}'
-            GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+            INNER JOIN RatingsLinks rl
+            ON mt.Title = rl.Title AND mt.Year = rl.Year
+            INNER JOIN Genres g
+            ON mt.Title = g.Title AND mt.Year = g.Year
+            WHERE mt.year = '${release_year}'`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -261,12 +259,13 @@ async function filters(req, res) {
     } else if (req.query.language && req.query.genre && !req.query.release_year) { // ONLY language and genre are specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
             FROM MoviesTVShows mt
-               JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-               JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE mt.Language = '${language}' AND g.genre LIKE '${genre}'
-            GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+            INNER JOIN RatingsLinks rl
+            ON mt.Title = rl.Title AND mt.Year = rl.Year
+            INNER JOIN Genres g
+            ON mt.Title = g.Title AND mt.Year = g.Year
+            WHERE mt.Language = '${language}' AND g.genre LIKE '${genre}'`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -279,12 +278,13 @@ async function filters(req, res) {
     } else if (!req.query.language && req.query.genre && req.query.release_year) { // ONLY genre and release_year are specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
             FROM MoviesTVShows mt
-               JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-               JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE  g.genre LIKE '${genre}' AND mt.year = '${release_year}'
-            GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+            INNER JOIN RatingsLinks rl
+            ON mt.Title = rl.Title AND mt.Year = rl.Year
+            INNER JOIN Genres g
+            ON mt.Title = g.Title AND mt.Year = g.Year
+            WHERE  g.genre LIKE '${genre}' AND mt.year = '${release_year}'`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -297,12 +297,13 @@ async function filters(req, res) {
     } else if (req.query.language && !req.query.genre && req.query.release_year) { // ONLY language and release_year are specified// ONLY release_year is specified
 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
             FROM MoviesTVShows mt
-               JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-               JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE mt.Language = '${language}' AND mt.year = '${release_year}'
-            GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+            INNER JOIN RatingsLinks rl
+            ON mt.Title = rl.Title AND mt.Year = rl.Year
+            INNER JOIN Genres g
+            ON mt.Title = g.Title AND mt.Year = g.Year
+            WHERE mt.Language = '${language}' AND mt.year = '${release_year}'`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -314,14 +315,15 @@ async function filters(req, res) {
 
     } else { // all three filters are specified
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
             FROM MoviesTVShows mt
-               JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-               JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
+            INNER JOIN RatingsLinks rl
+            ON mt.Title = rl.Title AND mt.Year = rl.Year
+            INNER JOIN Genres g
+            ON mt.Title = g.Title AND mt.Year = g.Year
             WHERE mt.Language = '${language}' and
                g.genre LIKE '${genre}' and
-               mt.year = '${release_year}'
-            GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+               mt.year = '${release_year}'`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
