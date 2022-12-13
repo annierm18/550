@@ -376,7 +376,8 @@ async function num_movies_by_country(req, res) {
 
         connection.query(`
             SELECT COUNT(m.title) as NumMovies, Country
-            FROM Countries c JOIN MoviesTVShows m ON c.year=m.year AND c.title=m.title
+            FROM Countries c 
+                LEFT JOIN MoviesTVShows m ON c.year=m.year AND c.title=m.title
             GROUP BY Country`, function (error, results, fields) {
 
             if (error) {
