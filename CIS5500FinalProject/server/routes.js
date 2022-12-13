@@ -186,10 +186,159 @@ async function most_popular_movies(req, res) {
 * Else, handles all combinations of filters specified (language, language and release_year, all three, etc.)
 *
 * */
+// async function filters(req, res) {
+//     const language = req.query.language; /* ? req.params.language : 'en'; */
+//     const genre = req.query.genre;
+//     const release_year = req.query.release_year;
+
+//     /* ADDITIONAL NICE TO HAVE FILTER PARAMETERS WE CAN ADD LATER IF WE'D LIKE
+//     const runtime = req.query.runtime;
+//     const rating = req.query.rating; */
+
+//     // NaN refers to Not-a-Number
+//     if (! req.query.language && ! req.query.genre && ! req.query.release_year) {
+//         return res.json({error: "Please specify a language, genre, and/or release year!"});
+
+//     } else if (req.query.language && !req.query.genre && !req.query.release_year) { // ONLY language is specified
+
+//         connection.query(`
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
+//             FROM MoviesTVShows mt
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE mt.Language = '${language}'`, function (error, results, fields) {
+
+//             if (error) {
+//                 console.log(error)
+//                 res.json({error: error})
+//             } else if (results) {
+//                 res.json({results: results})
+//             }
+//         });
+
+//     } else if (!req.query.language && req.query.genre && !req.query.release_year) { // ONLY genre is specified
+
+//         connection.query(`
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
+//             FROM MoviesTVShows mt
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE g.genre = '${genre}'`, function (error, results, fields) {
+
+//             if (error) {
+//                 console.log(error)
+//                 res.json({error: error})
+//             } else if (results) {
+//                 res.json({results: results})
+//             }
+//         });
+
+//     } else if (!req.query.language && !req.query.genre && req.query.release_year) { // ONLY release_year is specified
+
+//         connection.query(`
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
+//             FROM MoviesTVShows mt
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE mt.year = '${release_year}'`, function (error, results, fields) {
+
+//             if (error) {
+//                 console.log(error)
+//                 res.json({error: error})
+//             } else if (results) {
+//                 res.json({results: results})
+//             }
+//         });
+
+//     } else if (req.query.language && req.query.genre && !req.query.release_year) { // ONLY language and genre are specified
+
+//         connection.query(`
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
+//             FROM MoviesTVShows mt
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE mt.Language = '${language}' AND g.genre LIKE '${genre}'`, function (error, results, fields) {
+
+//             if (error) {
+//                 console.log(error)
+//                 res.json({error: error})
+//             } else if (results) {
+//                 res.json({results: results})
+//             }
+//         });
+
+//     } else if (!req.query.language && req.query.genre && req.query.release_year) { // ONLY genre and release_year are specified
+
+//         connection.query(`
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
+//             FROM MoviesTVShows mt
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE  g.genre LIKE '${genre}' AND mt.year = '${release_year}'`, function (error, results, fields) {
+
+//             if (error) {
+//                 console.log(error)
+//                 res.json({error: error})
+//             } else if (results) {
+//                 res.json({results: results})
+//             }
+//         });
+
+//     } else if (req.query.language && !req.query.genre && req.query.release_year) { // ONLY language and release_year are specified// ONLY release_year is specified
+
+//         connection.query(`
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
+//             FROM MoviesTVShows mt
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE mt.Language = '${language}' AND mt.year = '${release_year}'`, function (error, results, fields) {
+
+//             if (error) {
+//                 console.log(error)
+//                 res.json({error: error})
+//             } else if (results) {
+//                 res.json({results: results})
+//             }
+//         });
+
+//     } else { // all three filters are specified
+//         connection.query(`
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
+//             FROM MoviesTVShows mt
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE mt.Language = '${language}' and
+//                g.genre LIKE '${genre}' and
+//                mt.year = '${release_year}'`, function (error, results, fields) {
+
+//             if (error) {
+//                 console.log(error)
+//                 res.json({error: error})
+//             } else if (results) {
+//                 res.json({results: results})
+//             }
+//         });
+//     }
+// }
+
 async function filters(req, res) {
-    const language = req.query.language; /* ? req.params.language : 'en'; */
-    const genre = req.query.genre;
-    const release_year = req.query.release_year;
+    const language = req.query.language ? req.query.language :'en' /* ? req.params.language : 'en'; */
+    const genre = req.query.genre ? req.query.genre : 'Comedy'
+    const release_year = req.query.release_year ? req.query.release_year : 2001
 
     /* ADDITIONAL NICE TO HAVE FILTER PARAMETERS WE CAN ADD LATER IF WE'D LIKE
     const runtime = req.query.runtime;
@@ -199,131 +348,17 @@ async function filters(req, res) {
     if (! req.query.language && ! req.query.genre && ! req.query.release_year) {
         return res.json({error: "Please specify a language, genre, and/or release year!"});
 
-    } else if (req.query.language && !req.query.genre && !req.query.release_year) { // ONLY language is specified
-
+    } else { 
         connection.query(`
-            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
+            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
             INNER JOIN RatingsLinks rl
             ON mt.Title = rl.Title AND mt.Year = rl.Year
             INNER JOIN Genres g
             ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE mt.Language = '${language}'`, function (error, results, fields) {
-
-            if (error) {
-                console.log(error)
-                res.json({error: error})
-            } else if (results) {
-                res.json({results: results})
-            }
-        });
-
-    } else if (!req.query.language && req.query.genre && !req.query.release_year) { // ONLY genre is specified
-
-        connection.query(`
-            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
-            FROM MoviesTVShows mt
-            INNER JOIN RatingsLinks rl
-            ON mt.Title = rl.Title AND mt.Year = rl.Year
-            INNER JOIN Genres g
-            ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE g.genre = '${genre}'`, function (error, results, fields) {
-
-            if (error) {
-                console.log(error)
-                res.json({error: error})
-            } else if (results) {
-                res.json({results: results})
-            }
-        });
-
-    } else if (!req.query.language && !req.query.genre && req.query.release_year) { // ONLY release_year is specified
-
-        connection.query(`
-            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
-            FROM MoviesTVShows mt
-            INNER JOIN RatingsLinks rl
-            ON mt.Title = rl.Title AND mt.Year = rl.Year
-            INNER JOIN Genres g
-            ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE mt.year = '${release_year}'`, function (error, results, fields) {
-
-            if (error) {
-                console.log(error)
-                res.json({error: error})
-            } else if (results) {
-                res.json({results: results})
-            }
-        });
-
-    } else if (req.query.language && req.query.genre && !req.query.release_year) { // ONLY language and genre are specified
-
-        connection.query(`
-            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
-            FROM MoviesTVShows mt
-            INNER JOIN RatingsLinks rl
-            ON mt.Title = rl.Title AND mt.Year = rl.Year
-            INNER JOIN Genres g
-            ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE mt.Language = '${language}' AND g.genre LIKE '${genre}'`, function (error, results, fields) {
-
-            if (error) {
-                console.log(error)
-                res.json({error: error})
-            } else if (results) {
-                res.json({results: results})
-            }
-        });
-
-    } else if (!req.query.language && req.query.genre && req.query.release_year) { // ONLY genre and release_year are specified
-
-        connection.query(`
-            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
-            FROM MoviesTVShows mt
-            INNER JOIN RatingsLinks rl
-            ON mt.Title = rl.Title AND mt.Year = rl.Year
-            INNER JOIN Genres g
-            ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE  g.genre LIKE '${genre}' AND mt.year = '${release_year}'`, function (error, results, fields) {
-
-            if (error) {
-                console.log(error)
-                res.json({error: error})
-            } else if (results) {
-                res.json({results: results})
-            }
-        });
-
-    } else if (req.query.language && !req.query.genre && req.query.release_year) { // ONLY language and release_year are specified// ONLY release_year is specified
-
-        connection.query(`
-            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
-            FROM MoviesTVShows mt
-            INNER JOIN RatingsLinks rl
-            ON mt.Title = rl.Title AND mt.Year = rl.Year
-            INNER JOIN Genres g
-            ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE mt.Language = '${language}' AND mt.year = '${release_year}'`, function (error, results, fields) {
-
-            if (error) {
-                console.log(error)
-                res.json({error: error})
-            } else if (results) {
-                res.json({results: results})
-            }
-        });
-
-    } else { // all three filters are specified
-        connection.query(`
-            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
-            FROM MoviesTVShows mt
-            INNER JOIN RatingsLinks rl
-            ON mt.Title = rl.Title AND mt.Year = rl.Year
-            INNER JOIN Genres g
-            ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE mt.Language = '${language}' and
-               g.genre LIKE '${genre}' and
-               mt.year = '${release_year}'`, function (error, results, fields) {
+            WHERE mt.Language = '${language}' AND 
+                g.genre LIKE '${genre}' AND
+                mt.year = '${release_year}'`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
