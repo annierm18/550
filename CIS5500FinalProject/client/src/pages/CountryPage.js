@@ -102,13 +102,13 @@ class CountryPage extends React.Component {
         return (
             <div>
                 <MenuBar />
-                <h1 style={{ paddingLeft: '20px'  }}>{this.state.country}</h1>
+                <h1 style={{ paddingLeft: '20px', color: "#68BBE3" }}>{this.state.country}</h1>
                 <p style={{ 
                     paddingLeft: '20px', 
-                    color: "#f9d3b4", 
+                    color: "#D4F1F4", 
                     fontWeight: "400", 
                     fontFamily: "Poppins,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif"  
-                }}>Did you know? {this.state.country} has produced {this.state.numProduced} movies and tv shows! </p>
+                }}>Did you know? There are {this.state.numProduced} movies and tv shows from {this.state.country}! <br/> Use the dropdown to select a different country.</p>
                 <DropDown
                     trigger={
                         <div style={{ marginTop: "20px", marginBotton: "10px", }}>
@@ -131,12 +131,12 @@ class CountryPage extends React.Component {
                     onClick={this.handleChange}
                 />
                 <Divider />
-
+                            <p style={{ paddingLeft: "20%", textAlign: "left", color: "#D4F1F4"}}>Can you guess what are the most popular movies and tv shows from this country? 
+                             Hover over each card<br/> to see if you guessed correctly!  Click on each card to learn more about that movie or show!</p>
                             {this.state.movieDetails?.length > 0 ? (
                                 <div className="container" style={{ width: '70vw' }}>
-                                    {this.state.movieDetails.map((movie) => (
-                                    
-                                        <MovieCardCountry movie={movie} />
+                                    {this.state.movieDetails.map((movie, index) => (
+                                        <MovieCardCountry  movie={movie} num={index} />
                                     
                                 ))}
                             </div>

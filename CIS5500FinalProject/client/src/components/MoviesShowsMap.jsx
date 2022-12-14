@@ -22,9 +22,9 @@ export const MoviesShowsMap = () => {
 
     useEffect(load,[]);
 
-    useEffect(() => {
-        document.title = `You clicked ${country} times`;
-      }, [country]); 
+    //useEffect(() => {
+      //  document.title = `You clicked ${country} times`;
+    //  }, [country]); 
 
     function handleChange (country) {
        setCountry(country.ADMIN);

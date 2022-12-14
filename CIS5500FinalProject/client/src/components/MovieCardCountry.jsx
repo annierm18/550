@@ -3,11 +3,13 @@ import React from 'react';
 import {BrowserRouter as Router, Link, Redirect} from 'react-router-dom';
 
 
-const MovieCardCountry = ({ movie: { Title, PosterLink, Year} }) => {
+const MovieCardCountry = ({ movie: { Title, PosterLink, Year}, num }) => {
+  //var num = index;
+  console.log(num);
   return (
     <div className="movie" style={{ width: '13vw', height: '16vw'  }}>
       <div>
-        <p>Year: {Year}</p>
+        <p>{Title}</p>
       </div>
 
       <div>
@@ -21,9 +23,9 @@ const MovieCardCountry = ({ movie: { Title, PosterLink, Year} }) => {
         {/* </Link> */}
       </div>
 
-      <div style={{ height: '130px'  }}>
-        <span>Movie</span>
-        <h3>{Title}</h3>
+      <div >
+        <span>{num + 1}</span>
+  
         {/* <span> Test */}
         {/* <Redirect to={{ pathname: '/players', movie: { Title, PosterLink, Year} }} /> */}
         {/* </span> */}

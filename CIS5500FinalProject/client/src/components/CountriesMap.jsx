@@ -5,7 +5,6 @@ import './CountriesMap.css';
 
 export const CountriesMap = ({ countries, onClick, country  }) => {
     const mapStyle = {
-      //  fillColor: "white",
         weight: 1,
         color: "black",
         fillOpacity: 1,
