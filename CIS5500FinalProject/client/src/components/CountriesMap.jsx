@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { GeoJSON, MapContainer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './CountriesMap.css';
 
-export const CountriesMap = ({ countries, onClick, country  }) => {
+export const CountriesMap = ({ countries, onClick }) => {
     const mapStyle = {
         weight: 1,
         color: "black",

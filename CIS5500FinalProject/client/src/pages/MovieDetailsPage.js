@@ -65,10 +65,7 @@ class MovieDetailsPage extends React.Component {
           
   </div>
 
-  
     )
-
-  
   }
 }
 

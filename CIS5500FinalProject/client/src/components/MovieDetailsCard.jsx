@@ -1,7 +1,7 @@
 import React from 'react';
 
 
-const MovieDetailsCard = ({ title: {Title, Year, Language, Overview, Popularity, Runtime, Type, Genres, Companies, Countries, SpokenLanguages, PosterLink, URL, RatingValue, RatingCount }}) => {
+const MovieDetailsCard = ({ title: {Title, Year, Language, Overview, Popularity, Runtime, Type, Genres, Countries, PosterLink, URL }}) => {
   return (<>
  
     <h1 className="md__header-h1">{Title}</h1>
@@ -10,7 +10,6 @@ const MovieDetailsCard = ({ title: {Title, Year, Language, Overview, Popularity,
               <img src ={PosterLink !== "N/A" ? PosterLink : "https://via.placeholder.com/400"} alt={Title}/>
               </div>
               <div className="app__wrapper_info">
-              
                 <p className="movieDetailLabel"> Type: <span className="movieDetailText">{Type} </span></p>
                 <p className="movieDetailLabel"> Overview: <span className="movieDetailText">{Overview} </span></p>
                 <p className="mdBig">More Details: </p>

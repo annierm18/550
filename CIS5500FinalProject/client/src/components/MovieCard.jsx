@@ -2,7 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 
 
-const MovieCard = ({ movie: { Title, PosterLink, Year, Type} }) => {
+const MovieCard = ({ movie: { Title, PosterLink, Year} }) => {
   return (
     <div className="movie">
       <div>
@@ -19,7 +19,6 @@ const MovieCard = ({ movie: { Title, PosterLink, Year, Type} }) => {
       </div>
 
       <div>
-        <span>{Type}</span>
         <h3>{Title}</h3>
       </div>
      

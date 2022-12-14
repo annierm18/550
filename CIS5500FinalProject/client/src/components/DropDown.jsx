@@ -1,17 +1,10 @@
 import React, { useState, useEffect } from 'react';
-//import "@esri/calcite-components/dist/calcite/calcite.css";
-//import "@esri/calcite-components/dist/components/calcite-select";
-//import "@esri/calcite-components/dist/components/calcite-option";
-//import { CalciteSelect, CalciteOption } from "@esri/calcite-components-react";
 import LoadCountriesTask from '../tasks/LoadCountriesTask.js';
 import './DropDown.css';
 
 const DropDown = ({ trigger, onClick }) => {
 
     const [ countries, setCountries ] = useState([]);
-
-   // const [ countryValue, setCountryValue] = useState("United States of America");
-
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = () => {
