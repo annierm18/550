@@ -140,7 +140,7 @@ h1 {
 
 .movieCountry:hover div:nth-of-type(2) {
   height: 100%;
-  opacity: 0.3;
+  opacity: 0.5;
 }
 
 .movieCountry:hover div:nth-of-type(3) {

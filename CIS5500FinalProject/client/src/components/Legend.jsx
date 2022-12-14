@@ -10,9 +10,6 @@ export const Legend = ({legendItems}) => {
             position: "absolute",
             right: "2px",
             paddingTop: "3px"
-            /*
-            display: "flex",
-            alignItems: "stretch"*/
             }}
         >
             {legendItems.map((item)=>(

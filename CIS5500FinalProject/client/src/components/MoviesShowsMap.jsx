@@ -12,7 +12,6 @@ export const MoviesShowsMap = () => {
     const [ countries, setCountries ] = useState([]);
     const [ country, setCountry ] = useState("");
     const [ numProduced, setNumProduced ] = useState(0);
-   // const [ onClick, setOnClick] = useState("");
     const LegendItemsInReverse = [...LegendItems].reverse();
 
     const load = () => {     
@@ -21,10 +20,6 @@ export const MoviesShowsMap = () => {
     };
 
     useEffect(load,[]);
-
-    //useEffect(() => {
-      //  document.title = `You clicked ${country} times`;
-    //  }, [country]); 
 
     function handleChange (country) {
        setCountry(country.ADMIN);
