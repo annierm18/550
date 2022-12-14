@@ -5,6 +5,7 @@ import DropDown from '../components/DropDown';
 import { getCountry } from '../fetcher';
 import { getPopularGenreByCountry } from '../fetcher';
 import MenuBar from '../components/MenuBar';
+
 import {
     Divider,
 } from 'antd'
@@ -48,8 +49,12 @@ class CountryPage extends React.Component {
 
     updateGenre() {
         setTimeout(() => {
-            getPopularGenreByCountry(this.state.country).then(res => {           
-                this.setState({ popGenre: res.results[0].MostPopularGenre});
+            getPopularGenreByCountry(this.state.country).then(res => {  
+                if  (res.results !== null && res.results.length > 0){        
+                    this.setState({ popGenre: res.results[0].MostPopularGenre});
+                } else {
+                    this.setState({ popGenre: "unknown"});
+                }
             })
         }, 50)
     }
