@@ -16,7 +16,8 @@ import {
 
 } from 'antd'
 
-import { getCountry } from '../fetcher'
+import { getCountry } from '../fetcher';
+import { getPopularGenreByCountry } from '../fetcher';
 
 
 import MenuBar from '../components/MenuBar';
@@ -33,7 +34,9 @@ class CountryPage extends React.Component {
             genreQuery: "",
             languageQuery: "",
             releaseYearQuery: "",
+            popGenre: "Unknown",
             loading: true,
+            color: "rgba(0, 0, 0, 0)",
             country: "",
             numProduced: 0,
             movieResults: [],
@@ -46,7 +49,8 @@ class CountryPage extends React.Component {
         // This binding is necessary to make `this` work in the callback
         this.handleChange = this.handleChange.bind(this)
         this.updateDropdown = this.updateDropdown.bind(this)
-
+        this.updateGenre = this.updateGenre.bind(this)
+        this.displayGenre = this.displayGenre.bind(this)
     }
 
 
@@ -66,8 +70,28 @@ class CountryPage extends React.Component {
                 this.setState({ movieDetails: res.results})
             })}, 200)
          
-
+        this.updateGenre();
+        this.setState({ color:  "rgba(0, 0, 0, 0)"});
     }
+
+    updateGenre() {
+        console.log("TEST");
+        setTimeout(() => {
+            getPopularGenreByCountry(this.state.country).then(res => {
+            
+                this.setState({ popGenre: res.results[0].MostPopularGenre}
+                //console.log(res.results[0].MostPopularGenre
+                    );
+                console.log(res.results[0].Country);
+            })
+        }, 200)
+    }
+
+    displayGenre() {
+       // this.updateGenre();
+        this.setState({ color:  "#D4F1F4"});
+    }
+
 
     componentDidMount() {
         try {
@@ -86,7 +110,8 @@ class CountryPage extends React.Component {
         
         this.setState({ loading: false });
         this.updateDropdown();
-       
+        this.setState({ color:  "rgba(0, 0, 0, 0)"})
+        this.updateGenre();
     }
 
     //will set wahtever item the user selects in the dropdown
@@ -95,6 +120,8 @@ class CountryPage extends React.Component {
         this.setState({ country: value.ADMIN});
         this.setState({ numProduced: value.num});
         this.updateDropdown();
+        this.updateGenre();
+        this.setState({ color:  "rgba(0, 0, 0, 0)"});
     }
 
 
@@ -131,7 +158,16 @@ class CountryPage extends React.Component {
                     onClick={this.handleChange}
                 />
                 <Divider />
-                            <p style={{ paddingLeft: "20%", textAlign: "left", color: "#D4F1F4"}}>Can you guess what are the most popular movies and tv shows from this country? 
+                <h2 style={{color: "#68BBE3", marginLeft: "20%" }}> Movie Trivia</h2>
+                <h3 style={{color: "#D4F1F4", marginLeft: "20%" }}>Let's see how well you know this country's cinema!</h3>
+                <div>
+                    <button className="genre" onClick={this.displayGenre} style={{ backgroundColor: "rgba(0, 0, 0, 0)", marginLeft: "20%", fontSize: "17px", textAlign: "left", fontFamily: "Poppins,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif"}}>
+                        Click here to find out the most popular genre from this country! 
+                    </button>
+                </div>
+                <p style={{ color: this.state.color, marginLeft: "30%"}}>{this.state.popGenre}</p>
+               
+                            <p style={{ marginLeft: "20%", fontSize: "17px", textAlign: "left", color: "#D4F1F4", fontFamily: "Poppins,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif"}}>Can you guess what are the most popular movies and tv shows from this country?
                              Hover over each card<br/> to see if you guessed correctly!  Click on each card to learn more about that movie or show!</p>
                             {this.state.movieDetails?.length > 0 ? (
                                 <div className="container" style={{ width: '70vw' }}>

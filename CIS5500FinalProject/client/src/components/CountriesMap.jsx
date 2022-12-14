@@ -2,6 +2,8 @@ import React from 'react';
 import { GeoJSON, MapContainer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import './CountriesMap.css';
+import LegendItems from '../entities/LegendItems';
+import Legend from './Legend';
 
 export const CountriesMap = ({ countries, onClick }) => {
     const mapStyle = {
@@ -10,6 +12,8 @@ export const CountriesMap = ({ countries, onClick }) => {
         fillOpacity: 1,
         fontSize: "20px", 
     }
+
+    const LegendItemsInReverse = [...LegendItems].reverse();
 
     const onEachCountry = (countryVal, layer) => {
         layer.options.fillColor = countryVal.properties.color;
@@ -28,7 +32,7 @@ export const CountriesMap = ({ countries, onClick }) => {
     
     return ( 
         <MapContainer 
-            style={{height: "75vh"} } 
+            style={{height: "85vh"} } 
             zoom={2} 
             center={[20, 20]}>
             <GeoJSON 
@@ -36,6 +40,9 @@ export const CountriesMap = ({ countries, onClick }) => {
                 data={countries}
                 onEachFeature={onEachCountry}
             />
+             <Legend 
+                style={{height: "75vh", alignItems: "right"} } 
+                legendItems={LegendItemsInReverse} />
     
         </MapContainer>
      );

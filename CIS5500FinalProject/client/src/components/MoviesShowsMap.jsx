@@ -58,9 +58,7 @@ export const MoviesShowsMap = () => {
                     onClick={handleChange}
                     country={country}
                 />
-                
-                <Legend legendItems={LegendItemsInReverse} />
-        </div>
+            </div>
       )}
         </div>
      );

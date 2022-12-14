@@ -4,10 +4,8 @@ import {BrowserRouter as Router, Link, Redirect} from 'react-router-dom';
 
 
 const MovieCardCountry = ({ movie: { Title, PosterLink, Year}, num }) => {
-  //var num = index;
-  console.log(num);
   return (
-    <div className="movie" style={{ width: '13vw', height: '16vw'  }}>
+    <div className="movieCountry" style={{ width: '13vw', height: '16vw'  }}>
       <div>
         <p>{Title}</p>
       </div>
