@@ -56,42 +56,52 @@ async function movie(req, res) {
         // console.log(title);
     }
 
+    // connection.query(`
+    //     drop view Movie_Info;
+    // `)
+
+    // connection.query(`
+    //     CREATE VIEW Movie_Info(Title, Year, Language, Overview, Popularity, Runtime, Type, Genres, Countries, PosterLink, URL) AS
+    //     With G as (
+    //     SELECT s.Title, s.Year, s.Language, s.Overview, s.Popularity, s.Runtime, s.Type, GROUP_CONCAT(g.Genre SEPARATOR ', ') as Genres
+    //     FROM MoviesTVShows s
+    //         LEFT JOIN Genres g ON s.Title = g.Title AND s.Year = g.Year
+    //     GROUP BY s.title, s.year
+    //     ),
+    //     C as (
+    //     SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, GROUP_CONCAT(c.Country SEPARATOR ', ') as Countries
+    //     FROM G g
+    //         LEFT JOIN Countries c ON g.Title = c.Title AND g.Year = c.Year
+    //     GROUP BY g.title, g.year
+    //     ),
+    //     Rating as (
+    //     SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Countries, sp.PosterLink, sp.URL
+    //     FROM C g
+    //         JOIN RatingsLinks sp ON g.Title = sp.Title AND g.Year = sp.Year
+    //     GROUP BY g.title, g.year
+    //     )
+    //     SELECT *
+    //     From Rating;
+    // `);
+
+
+    // SELECT *
+    // From Movie_Info
+    // WHERE Title = '${title}' AND Year = '${year}'
+
     // NaN refers to Not-a-Number
     if (req.query.title && req.query.year && !isNaN(req.query.year)) {
         connection.query(`
-            With G as (
-              SELECT s.Title, s.Year, s.Language, s.Overview, s.Popularity, s.Runtime, s.Type, GROUP_CONCAT(g.Genre SEPARATOR ', ') as Genres
-              FROM MoviesTVShows s
-                  LEFT JOIN Genres g ON s.Title = g.Title AND s.Year = g.Year
-              GROUP BY s.title, s.year
-            ),
-            Comp as (
-              SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, GROUP_CONCAT(c.Company SEPARATOR ', ') as Companies
-              FROM G g
-                 LEFT JOIN ProductionCompanies c ON g.Title = c.Title AND g.Year = c.Year
-              GROUP BY g.title, g.year
-            ),
-            C as (
-              SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Companies, GROUP_CONCAT(c.Country SEPARATOR ', ') as Countries
-              FROM Comp g
-                  LEFT JOIN Countries c ON g.Title = c.Title AND g.Year = c.Year
-              GROUP BY g.title, g.year
-            ),
-            Spoken as (
-              SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Companies, g.Countries, GROUP_CONCAT(sp.Language SEPARATOR ', ') as SpokenLanguages
-              FROM C g
-                 LEFT JOIN SpokenLanguage sp ON g.Title = sp.Title AND g.Year = sp.Year
-              GROUP BY g.title, g.year
-            ),
-            Rating as (
-              SELECT g.Title, g.Year, g.Language, g.Overview, g.Popularity, g.Runtime, g.Type, g.Genres, g.Companies, g.Countries, g.SpokenLanguages, sp.PosterLink, sp.URL, sp.RatingValue, sp.RatingCount
-              FROM Spoken g
-                  JOIN RatingsLinks sp ON g.Title = sp.Title AND g.Year = sp.Year
-              GROUP BY g.title, g.year
-            )
-            SELECT *
-            From Rating
-            WHERE Title = '${title}' AND Year = '${year}'`, function (error, results, fields) {
+        SELECT s.Title, s.Year, s.Language, s.Overview, s.Popularity, s.Runtime, s.Type,
+            GROUP_CONCAT(DISTINCT g.Genre SEPARATOR ', ') as Genres,
+            GROUP_CONCAT(DISTINCT cnt.Country SEPARATOR ', ') as Countries,
+            r.PosterLink, r.URL
+        FROM RatingsLinks r
+        LEFT JOIN Genres g ON r.Title = g.Title AND r.Year = g.Year
+        LEFT JOIN Countries cnt ON r.Title = cnt.Title AND r.Year = cnt.Year
+        Join MoviesTVShows s on r.Year = s.Year AND r.Title = s.Title
+        WHERE s.Title = '${title}' AND s.Year='${year}'
+        GROUP BY r.Title, r.Year`, function (error, results, fields) {
 
             if (error) {
                 console.log(error)
@@ -154,7 +164,7 @@ async function get_all_from_country(req, res) {
 async function most_popular_movies(req, res) {
 
     connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, mt.Popularity as Popularity, rl.RatingValue as RatingValue, rl.Year as Year, mt.Type as Type
+            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, mt.Popularity as Popularity, rl.RatingValue as RatingValue, rl.Year as Year
             FROM MoviesTVShows mt
             JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
             ORDER BY Popularity desc, RatingValue desc
@@ -170,12 +180,12 @@ async function most_popular_movies(req, res) {
 
 }
 
-// /* Route 4 (handler) for the GET route '/filters'
-// *
-// * If no parameters are specified, it will prompt you to enter either language, genre, and/or release year
-// * Else, handles all combinations of filters specified (language, language and release_year, all three, etc.)
-// *
-// * */
+/* Route 4 (handler) for the GET route '/filters'
+*
+* If no parameters are specified, it will prompt you to enter either language, genre, and/or release year
+* Else, handles all combinations of filters specified (language, language and release_year, all three, etc.)
+*
+* */
 // async function filters(req, res) {
 //     const language = req.query.language; /* ? req.params.language : 'en'; */
 //     const genre = req.query.genre;
@@ -192,12 +202,13 @@ async function most_popular_movies(req, res) {
 //     } else if (req.query.language && !req.query.genre && !req.query.release_year) { // ONLY language is specified
 
 //         connection.query(`
-//             SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
 //             FROM MoviesTVShows mt
-//                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-//                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-//             WHERE mt.Language = '${language}'
-//             GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE mt.Language = '${language}'`, function (error, results, fields) {
 
 //             if (error) {
 //                 console.log(error)
@@ -210,12 +221,13 @@ async function most_popular_movies(req, res) {
 //     } else if (!req.query.language && req.query.genre && !req.query.release_year) { // ONLY genre is specified
 
 //         connection.query(`
-//             SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
 //             FROM MoviesTVShows mt
-//                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-//                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-//             WHERE  g.genre LIKE '${genre}'
-//             GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE g.genre = '${genre}'`, function (error, results, fields) {
 
 //             if (error) {
 //                 console.log(error)
@@ -228,12 +240,13 @@ async function most_popular_movies(req, res) {
 //     } else if (!req.query.language && !req.query.genre && req.query.release_year) { // ONLY release_year is specified
 
 //         connection.query(`
-//             SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
 //             FROM MoviesTVShows mt
-//                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-//                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-//             WHERE mt.year = '${release_year}'
-//             GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE mt.year = '${release_year}'`, function (error, results, fields) {
 
 //             if (error) {
 //                 console.log(error)
@@ -246,12 +259,13 @@ async function most_popular_movies(req, res) {
 //     } else if (req.query.language && req.query.genre && !req.query.release_year) { // ONLY language and genre are specified
 
 //         connection.query(`
-//             SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
 //             FROM MoviesTVShows mt
-//                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-//                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-//             WHERE mt.Language = '${language}' AND g.genre LIKE '${genre}'
-//             GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE mt.Language = '${language}' AND g.genre LIKE '${genre}'`, function (error, results, fields) {
 
 //             if (error) {
 //                 console.log(error)
@@ -264,12 +278,13 @@ async function most_popular_movies(req, res) {
 //     } else if (!req.query.language && req.query.genre && req.query.release_year) { // ONLY genre and release_year are specified
 
 //         connection.query(`
-//             SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
 //             FROM MoviesTVShows mt
-//                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-//                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-//             WHERE  g.genre LIKE '${genre}' AND mt.year = '${release_year}'
-//             GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE  g.genre LIKE '${genre}' AND mt.year = '${release_year}'`, function (error, results, fields) {
 
 //             if (error) {
 //                 console.log(error)
@@ -282,12 +297,13 @@ async function most_popular_movies(req, res) {
 //     } else if (req.query.language && !req.query.genre && req.query.release_year) { // ONLY language and release_year are specified// ONLY release_year is specified
 
 //         connection.query(`
-//             SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
 //             FROM MoviesTVShows mt
-//                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-//                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-//             WHERE mt.Language = '${language}' AND mt.year = '${release_year}'
-//             GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
+//             WHERE mt.Language = '${language}' AND mt.year = '${release_year}'`, function (error, results, fields) {
 
 //             if (error) {
 //                 console.log(error)
@@ -299,14 +315,15 @@ async function most_popular_movies(req, res) {
 
 //     } else { // all three filters are specified
 //         connection.query(`
-//             SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year
+//             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as Poster, rl.Year as Year
 //             FROM MoviesTVShows mt
-//                JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-//                JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
+//             INNER JOIN RatingsLinks rl
+//             ON mt.Title = rl.Title AND mt.Year = rl.Year
+//             INNER JOIN Genres g
+//             ON mt.Title = g.Title AND mt.Year = g.Year
 //             WHERE mt.Language = '${language}' and
 //                g.genre LIKE '${genre}' and
-//                mt.year = '${release_year}'
-//             GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+//                mt.year = '${release_year}'`, function (error, results, fields) {
 
 //             if (error) {
 //                 console.log(error)
@@ -333,14 +350,16 @@ async function filters(req, res) {
 
     } else { 
         connection.query(`
-            SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, rl.Year as Year, mt.Type as Type
+            SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
-               JOIN RatingsLinks rl ON mt.Title = rl.Title AND mt.Year = rl.Year
-               JOIN Genres g ON mt.Title = g.Title AND mt.Year = g.Year
-            WHERE mt.Language = '${language}' and
-               g.genre LIKE '${genre}' and
-               mt.year = '${release_year}'
-            GROUP BY mt.Title, rl.PosterLink;`, function (error, results, fields) {
+            INNER JOIN RatingsLinks rl
+            ON mt.Title = rl.Title AND mt.Year = rl.Year
+            INNER JOIN Genres g
+            ON mt.Title = g.Title AND mt.Year = g.Year
+            WHERE mt.Language = '${language}' AND 
+                g.genre LIKE '${genre}' AND
+                mt.year = '${release_year}'`, function (error, results, fields) {
+
             if (error) {
                 console.log(error)
                 res.json({error: error})
@@ -348,7 +367,8 @@ async function filters(req, res) {
                 res.json({results: results})
             }
         });
-    }}
+    }
+}
 
 /* Route 5 (handler) for the GET route '/nummoviesbycountry */
 async function num_movies_by_country(req, res) {
@@ -356,7 +376,8 @@ async function num_movies_by_country(req, res) {
 
         connection.query(`
             SELECT COUNT(m.title) as NumMovies, Country
-            FROM Countries c JOIN MoviesTVShows m ON c.year=m.year AND c.title=m.title
+            FROM Countries c 
+                LEFT JOIN MoviesTVShows m ON c.year=m.year AND c.title=m.title
             GROUP BY Country`, function (error, results, fields) {
 
             if (error) {
