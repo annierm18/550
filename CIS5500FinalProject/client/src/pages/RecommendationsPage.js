@@ -27,7 +27,6 @@ class RecommendationsPage extends React.Component {
             genreQuery: "",
             languageQuery: "",
             releaseYearQuery: "",
-            movieResults: [],
             movieDetails: [],
             totalPage:0,
             current:1,
@@ -47,7 +46,6 @@ class RecommendationsPage extends React.Component {
 
     handleLanguageQueryChange(event) {
         this.setState({ languageQuery: event.target.value })
-        console.log("LANGUAGE1: " + this.state.languageQuery)
     }
 
     handleReleaseYearQueryChange(event) {
