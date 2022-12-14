@@ -22,7 +22,7 @@ class MovieDetailsPage extends React.Component {
     }
 
 
-    handleTitleQueryChange(event) {
+  handleTitleQueryChange(event) {
       this.setState({ titleQuery: event.target.value })
   }
 
@@ -59,7 +59,7 @@ class MovieDetailsPage extends React.Component {
                             ) : (
                             <div className="empty">
                                 <h2>{this.state.movieDetails?.length}</h2>
-                                <h2>No movies found</h2>
+                                <h2>No movie found</h2>
                             </div>
                             )}
           
