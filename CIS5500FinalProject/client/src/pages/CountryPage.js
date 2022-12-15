@@ -132,14 +132,6 @@ class CountryPage extends React.Component {
                 <Divider />
                 <div style={{width: "100%"}}>
                     <p style={{color: "#68BBE3", fontSize: "25px", textAlign: "center"}}> Movie Trivia Continued!</p>
-                    {/** 
-                    <div style={{width: "100%", textAlign: "center"}}>
-                        <button className="genre" onClick={this.displayGenre} style={{ float: "center", backgroundColor: "rgba(0, 0, 0, 0)", fontSize: "17px", textAlign: "center", fontFamily: "Poppins,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif"}}>
-                            Click here to find out the most popular genre from this country... 
-                        </button>
-                        <p style={{ color: this.state.color, textAlign: "center", float: "center"}}>{this.state.popGenre}!</p>
-                    </div>
-                */}
                 </div>
                             <p style={{ fontSize: "20px", fontWeight: "400", width: "100%", textAlign: "center", color: "#D4F1F4", fontFamily: "Poppins,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif"}}>
                                 What are the <b style={{color: "#68BBE3" }}>most popular</b> movies and tv shows from this country?<br/>

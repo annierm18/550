@@ -12,7 +12,6 @@ export const MoviesShowsMap = () => {
     const [ countries, setCountries ] = useState([]);
     const [ country, setCountry ] = useState("");
     const [ numProduced, setNumProduced ] = useState(0);
-    const LegendItemsInReverse = [...LegendItems].reverse();
 
     const load = () => {     
         const loadCountriesTask = new LoadCountriesTask();
