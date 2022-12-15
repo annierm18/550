@@ -33,9 +33,6 @@ app.get('/nummoviesbycountry', routes.num_movies_by_country)
 // app.get('/player', routes.player)
 app.get('/populargenre/:country', routes.popular_genre_by_country)
 
-// Route 7 - register as GET
-app.get('/search', routes.search)
-
 
 
 

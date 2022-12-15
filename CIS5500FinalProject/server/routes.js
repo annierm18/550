@@ -238,36 +238,6 @@ async function popular_genre_by_country(req, res) {
     });
 }
 
-/* Route 7 (handler) for the GET route '/search/movies'
-* SIMPLE search function that enables search by Title and other parameters (Country or Language)
-* May be enhanced to include search over keywords in 'Overview'
-* */
-async function search(req, res) {
-    const title = req.query.title;
-
-    // NaN refers to Not-a-Number
-    if (req.query.title) {
-        connection.query(`
-            SELECT *
-            FROM MoviesTVShows NATURAL JOIN Countries
-            WHERE
-            (
-              Title LIKE '${title}'
-            )
-            ORDER BY Title LIMIT 1`, function (error, results, fields) {
-
-            if (error) {
-                console.log(error)
-                res.json({error: error})
-            } else if (results) {
-                res.json({results: results})
-            }
-        });
-
-    } else {
-        return res.json({error: "Please specify a search parameter!"});
-    }
-}
 
 "Title, Dilwale Dulhania Le Jayenge, Year, Language, Overview, Popularity, Runtime, Type, Country"
 
@@ -279,5 +249,4 @@ module.exports = {
     filters,
     num_movies_by_country,
     popular_genre_by_country,
-    search
 }

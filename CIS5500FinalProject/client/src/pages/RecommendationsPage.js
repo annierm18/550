@@ -13,7 +13,7 @@ import {
 
 } from 'antd'
 
-import { getFilteredMovieResults, getTenMostPopular } from '../fetcher'
+import { getFilteredMovieResults, getMostPopular } from '../fetcher'
 
 
 import MenuBar from '../components/MenuBar';
@@ -68,7 +68,7 @@ class RecommendationsPage extends React.Component {
                 this.setState(JSON.parse(localStorage.getItem('movieDetailsState')))
             }
     } else {
-        getTenMostPopular().then(res => {
+        getMostPopular().then(res => {
             this.setState({ 
                 movieDetails: res.results, 
                 totalPage: res.results.length / pageSize, 
@@ -78,7 +78,6 @@ class RecommendationsPage extends React.Component {
         })
     }
     }
-
 
     handleChange = (page) => {
         this.setState({
