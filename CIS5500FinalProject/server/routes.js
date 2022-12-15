@@ -59,6 +59,7 @@ async function movie(req, res) {
 
     // NaN refers to Not-a-Number
     if (req.query.title && req.query.year && !isNaN(req.query.year)) {
+        // Returns movie information such as Genres, Country, Language, Year, etc
         connection.query(`
         SELECT s.Title, s.Year, s.Language, s.Overview, s.Popularity, s.Runtime, s.Type,
             GROUP_CONCAT(DISTINCT g.Genre SEPARATOR ', ') as Genres,
@@ -107,6 +108,7 @@ async function get_all_from_country(req, res) {
 
     // NaN refers to Not-a-Number
     if (req.query.country) {
+        // Returns the top 10 movies from each country
         connection.query(`
             SELECT distinct(mt.Title) as Title, Popularity, RatingValue, Country, PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
@@ -130,7 +132,7 @@ async function get_all_from_country(req, res) {
 
 /* Route 3 (handler) for the GET route '/mostpopular */
 async function most_popular_movies(req, res) {
-
+    // Displays the top 100 movies of all time
     connection.query(`
             SELECT distinct(mt.Title) as Title, rl.Posterlink as PosterLink, mt.Popularity as Popularity, rl.RatingValue as RatingValue, rl.Year as Year
             FROM MoviesTVShows mt
@@ -169,6 +171,7 @@ async function filters(req, res) {
         return res.json({error: "Please specify a language, genre, and/or release year!"});
 
     } else { 
+        // filters all the movies based on the search criteria
         connection.query(`
             SELECT DISTINCT (mt.Title) as Title, rl.PosterLink as PosterLink, rl.Year as Year
             FROM MoviesTVShows mt
@@ -193,7 +196,7 @@ async function filters(req, res) {
 /* Route 5 (handler) for the GET route '/nummoviesbycountry */
 async function num_movies_by_country(req, res) {
     // a GET request to /nummoviesbycountry
-
+        // Get how many movies were produced in each country
         connection.query(`
             SELECT COUNT(m.title) as NumMovies, Country
             FROM Countries c 
@@ -216,7 +219,7 @@ async function popular_genre_by_country(req, res) {
     // a GET request to /populargenre/United%20States%20of%20America
     // a GET request to /populargenre/India
     const country = req.params.country ? req.params.country : 'United States of America';
-
+    // Got each countries favorite genre
     connection.query(`
         With Temp as (
           SELECT c.Country, g.Genre, COUNT(g.Genre) as Num
